@@ -161,11 +161,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <classifier>runtime</classifier>
-        </dependency>
         <!-- Jakarta XML Web Services API for Java 17+ -->
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
