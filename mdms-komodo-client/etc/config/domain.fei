@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--                             
+   Development FEI Domain File 
+
+   Copyright (c) 2006 by the California Institute of Technology.       
+   ALL RIGHTS RESERVED.  United States Government Sponsorship          
+   acknowledged. Any commercial use must be negotiated with the        
+   Office of Technology at the California Institute of Technology.     
+                                                                       
+   The technical data in this document (or file) is controlled for     
+   export under the Export Administration Regulations (EAR), 15 CFR,   
+   Parts 730-774. Violations of these laws are subject to fines and    
+   penalties under the Export Administration Act.                      
+   
+   @author T. Huang {Thomas.Huang@jpl.nasa.gov}
+           R. Pavlovsky {rich.pavlovsky@jpl.nasa.gov}
+   @version $Id: domain.fei,v 1.52 2017/06/05 16:48:29 awt Exp $
+-->
+<fei:domain xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fei="http://mdms.jpl.nasa.gov/schema/fei" xsi:schemaLocation="http://mdms.jpl.nasa.gov/schema/fei http://mdms.jpl.nasa.gov/schema/fei/domain.xsd">
+    <fei:defaultGroup>build</fei:defaultGroup>
+    <fei:group name="build">
+        <fei:server name="build_1">
+            <fei:host>mdms-dev.jpl.nasa.gov</fei:host>
+            <fei:port>12202</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:server>
+        <fei:server name="build_2">
+            <fei:host>mdms-dev.jpl.nasa.gov</fei:host>
+            <fei:port>11202</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:server>
+        <fei:vft>
+            <fei:host>mdms-dev.jpl.nasa.gov</fei:host>
+            <fei:port>12202</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:vft>
+        <fei:fileType>archive</fei:fileType>
+        <fei:fileType>build_logs</fei:fileType>
+        <fei:fileType>jboss</fei:fileType>
+        <fei:fileType>process_init</fei:fileType>
+        <fei:fileType>prod_available</fei:fileType>
+        <fei:fileType>publish</fei:fileType>
+        <fei:fileType>sig_event</fei:fileType>
+        <fei:fileType>testFileType</fei:fileType>
+        <fei:fileType>testFileType2</fei:fileType>
+        <fei:fileType>training_materials</fei:fileType>
+    </fei:group>
+    <fei:group name="dev">
+        <fei:server name="dev_1">
+            <fei:host>mdms-dev.jpl.nasa.gov</fei:host>
+            <fei:port>13202</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:server>
+        <fei:server name="dev_2">
+            <fei:host>mdms-dev.jpl.nasa.gov</fei:host>
+            <fei:port>14202</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:server>
+        <fei:server name="dev_3">
+            <fei:host>mdms-dev.jpl.nasa.gov</fei:host>
+            <fei:port>15202</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:server>
+        <fei:vft>
+            <fei:host>mdms-dev.jpl.nasa.gov</fei:host>
+            <fei:port>13202</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:vft>
+        <fei:fileType>type1</fei:fileType>
+        <fei:fileType>type2</fei:fileType>
+        <fei:fileType>type3</fei:fileType>
+        <fei:fileType>type4</fei:fileType>
+        <fei:fileType>type5</fei:fileType>
+        <fei:fileType>type6</fei:fileType>
+        <fei:fileType>type7</fei:fileType>
+        <fei:fileType>incoming_dat</fei:fileType>
+        <fei:fileType>incoming_dtl</fei:fileType>
+    </fei:group>
+    <fei:group name="fei5_d">
+        <fei:server name="fei5_d_1">
+            <fei:host>panther.jpl.nasa.gov</fei:host>
+            <fei:port>43232</fei:port>
+            <fei:auth>SHA1</fei:auth>
+            <fei:communication>SSL</fei:communication>
+        </fei:server>
+        <fei:fileType>image1</fei:fileType>
+        <fei:fileType>image2</fei:fileType>
+        <fei:fileType>image3</fei:fileType>
+        <fei:fileType>image4</fei:fileType>
+        <fei:fileType>image5</fei:fileType>
+        <fei:fileType>image6</fei:fileType>
+        <fei:fileType>image7</fei:fileType>
+    </fei:group>
+</fei:domain>

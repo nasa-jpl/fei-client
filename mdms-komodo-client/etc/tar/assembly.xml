@@ -1,0 +1,115 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+    <baseDirectory>${file.separator}fei5${file.separator}</baseDirectory>
+    <id>fei5</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <fileSets>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}target</directory>
+            <outputDirectory>${file.separator}lib</outputDirectory>
+            <includes>
+                <include>mdms-komodo-client-${project.version}.jar</include>
+            </includes>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}etc${file.separator}docs</directory>
+            <outputDirectory>${file.separator}doc${file.separator}pdf</outputDirectory>
+            <includes>
+                <include>komodo*.pdf</include>
+            </includes>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}etc${file.separator}ssl</directory>
+            <outputDirectory>${file.separator}config</outputDirectory>
+            <includes>
+                <include>domain.fei</include>
+                <include>mdmsgui.lcf</include>
+            </includes>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}..${file.separator}.tmp${file.separator}etc${file.separator}config</directory>
+            <outputDirectory>${file.separator}config</outputDirectory>
+            <includes>
+                <include>mdmsconfig.sh</include>
+                <include>mdmsconfig.pm</include>
+                <include>mdms.lcf</include>
+            </includes>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}etc${file.separator}config</directory>
+            <outputDirectory>${file.separator}config</outputDirectory>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}etc${file.separator}ssl</directory>
+            <outputDirectory>${file.separator}config</outputDirectory>
+            <includes>
+                <include>mdms-fei.keystore</include>
+                <include>public.der</include>
+            </includes>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}etc${file.separator}bin</directory>
+            <outputDirectory>${file.separator}bin</outputDirectory>
+            <excludes>
+                <exclude>%regex[.+csh]</exclude>
+                <exclude>%regex[.+bat]</exclude>
+            </excludes>
+            <directoryMode>755</directoryMode>
+            <fileMode>755</fileMode>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>${project.basedir}${file.separator}target${file.separator}komodo.client.readme</source>
+            <outputDirectory>${file.separator}</outputDirectory>
+            <destName>README</destName>
+            <lineEnding>unix</lineEnding>
+            <fileMode>755</fileMode>
+        </file>
+
+        <file>
+            <source>${project.basedir}${file.separator}..${file.separator}.tmp${file.separator}etc${file.separator}bin${file.separator}use_FEI5.csh</source>
+            <outputDirectory>${file.separator}</outputDirectory>
+            <fileMode>755</fileMode>
+        </file>
+
+        <file>
+            <source>${project.basedir}${file.separator}..${file.separator}.tmp${file.separator}etc${file.separator}bin${file.separator}use_FEI5.sh</source>
+            <outputDirectory>${file.separator}</outputDirectory>
+            <fileMode>755</fileMode>
+        </file>
+    </files>
+
+    <dependencySets>
+        <dependencySet>
+            <excludes>
+                <exclude>com.ibm.icu:icu4j</exclude>
+                <exclude>jdom:jdom</exclude>
+                <exclude>xalan:xalan</exclude>
+                <exclude>xml-apis:xml-apis</exclude>
+                <exclude>xom:xom</exclude>
+                <exclude>xerces:xercesImpl</exclude>
+                <exclude>xerces:xmlParserAPIs</exclude>
+            </excludes>
+            <outputDirectory>${file.separator}lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <directoryMode>644</directoryMode>
+        </dependencySet>
+    </dependencySets>
+</assembly>

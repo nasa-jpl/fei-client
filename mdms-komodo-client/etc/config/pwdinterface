@@ -1,0 +1,24 @@
+#
+# pwdinterface file for the password server version 2,
+# running on panther 
+#
+#  Copyright (c) 2006 by the California Institute of Technology.      
+#  ALL RIGHTS RESERVED.  United States Government Sponsorship         
+#  acknowledged. Any commercial use must be negotiated with the       
+#  Office of Technology at the California Institute of Technology.    
+#                                                                     
+#  The technical data in this document (or file) is controlled for    
+#  export under the Export Administration Regulations (EAR), 15 CFR,  
+#  Parts 730-774. Violations of these laws are subject to fines and   
+#  penalties under the Export Administration Act.                     
+#
+# Make sure each line is in the format KEYWORD = VALUE
+# and that there are spaces between the keyword, the '='
+# and the value.
+#
+SERVERNAME = DEVPwdSrv              # password server name
+SERVERREALM = MIPS-DEV.JPL.NASA.GOV # kerberos realm of the pwdserver
+SERVERHOST = panther.jpl.nasa.gov   # host on which pwdserver is running
+SERVERPORT = 43300                  # port number of the pwdserver
+FKSERVERPORT = 43301                # ignore for now, but make sure it's
+                                    # 1 + SERVERPORT value.
