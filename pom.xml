@@ -6,26 +6,24 @@
     <name>JPL - AMMOS - IDS - FEI Client Parent</name>
     <description>FEI Client Parent POM</description>
 
-    <parent>
-        <groupId>gov.nasa.jpl.ammos.ids</groupId>
-        <artifactId>parent-mipl</artifactId>
-        <version>4.2.1</version>
-    </parent>
-
     <groupId>gov.nasa.jpl.ammos.ids.fei5</groupId>
     <artifactId>fei-client</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
+    <organization>
+        <name>NASA Jet Propulsion Laboratory</name>
+        <url>https://www.jpl.nasa.gov/</url>
+    </organization>
+
     <modules>
         <module>mdms-komodo-client</module>
-        <module>mdms-komodo-msl-handlers</module>
         <module>mdms-komodo-client-handler-examples</module>
-        <module>mdms-komodo-client-war</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Tagging for CI -->
         <semver>2.5.2</semver>
         <revision>${semver}${buildnum}${sha1}${changelist}</revision>
@@ -33,29 +31,37 @@
         <buildnum>b0</buildnum>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
+        <!-- Compiler settings (inlined from parent-mipl) -->
+        <compiler.debug>true</compiler.debug>
+        <compiler.debuglevel>source,lines,vars</compiler.debuglevel>
+        <compiler.javac>true</compiler.javac>
         <maven.javadoc.skip>false</maven.javadoc.skip>
         <maven.source.skip>true</maven.source.skip>
-        <!-- BUILD PARMS -->
-        <!-- VERSIONING -->
+        <!-- Plugin versions (inlined from parent-mipl) -->
+        <version.plugin.compiler>3.8.1</version.plugin.compiler>
+        <version.plugin.assembly>3.3.0</version.plugin.assembly>
+        <version.plugin.clean>3.1.0</version.plugin.clean>
+        <version.plugin.dependency>3.1.2</version.plugin.dependency>
+        <version.plugin.deploy>3.0.0-M1</version.plugin.deploy>
+        <version.plugin.enforcer>3.0.0-M3</version.plugin.enforcer>
+        <version.plugin.flatten>1.2.7</version.plugin.flatten>
+        <version.plugin.install>3.0.0-M1</version.plugin.install>
+        <version.plugin.jar>3.2.0</version.plugin.jar>
+        <version.plugin.javadoc>3.3.1</version.plugin.javadoc>
+        <version.plugin.release>3.0.0-M4</version.plugin.release>
         <version.plugin.replacer>1.5.2</version.plugin.replacer>
         <version.plugin.resources>3.2.0</version.plugin.resources>
-        <version.plugin.deploy>3.0.0-M1</version.plugin.deploy>
-        <version.plugin.flatten>1.2.7</version.plugin.flatten>
-        <version.plugin.javadoc>3.3.1</version.plugin.javadoc>
+        <version.plugin.scm>1.11.3</version.plugin.scm>
+        <version.plugin.shade>3.2.4</version.plugin.shade>
         <version.plugin.source>3.2.1</version.plugin.source>
         <version.plugin.surefire>3.0.0-M5</version.plugin.surefire>
         <version.plugin.jaxb2>2.5.0</version.plugin.jaxb2>
-        <version.plugin.jaxws>2.6</version.plugin.jaxws>
-        <version.plugin.jaxws.tools>4.0.0</version.plugin.jaxws.tools>
-        <version.plugin.war>3.3.1</version.plugin.war>
+        <!-- Jakarta-compatible JAX-WS plugin for Java 17+ -->
+        <version.plugin.jaxws>4.0.3</version.plugin.jaxws>
         <version.jakarta.xml.ws-api>4.0.0</version.jakarta.xml.ws-api>
         <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>
         <version.jaxb-impl>4.0.0</version.jaxb-impl>
         <version.fei-main>3.6.5</version.fei-main>
-<!--        <version.authapi>8.1.2-SNAPSHOT</version.authapi>-->
-<!--        <version.cryptoj>8.1.2-SNAPSHOT</version.cryptoj>-->
-<!--        <version.jconnect>5.5_EBF_11937-SNAPSHOT</version.jconnect>-->
-<!--        <version.juneberry>1.0.7-SNAPSHOT</version.juneberry>-->
         <version.c3p0>0.8.5.2</version.c3p0>
         <version.json-simple>1.1</version.json-simple>
         <version.fscontext>4.2</version.fscontext>
@@ -74,6 +80,7 @@
         <version.oswego-concurrent>1.3.4</version.oswego-concurrent>
         <version.slf4j>1.7.7</version.slf4j>
     </properties>
+
     <url>https://github.com/nasa-ammos/fei-client</url>
 
     <licenses>
@@ -92,65 +99,73 @@
             <organizationUrl>https://www.jpl.nasa.gov/</organizationUrl>
         </developer>
     </developers>
+
     <scm>
-        <connection>scm:git:ssh://git@github.jpl.nasa.gov/MIPL/fei-client.git</connection>
-        <developerConnection>scm:git:ssh://git@github.jpl.nasa.gov/MIPL/fei-client.git</developerConnection>
-        <url>https://github.jpl.nasa.gov/MIPL/fei-client</url>
+        <connection>scm:git:https://github.com/nasa-ammos/fei-client.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/nasa-ammos/fei-client.git</developerConnection>
+        <url>https://github.com/nasa-ammos/fei-client</url>
     </scm>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
         <pluginManagement>
             <plugins>
+                <!-- Compiler: Java 17, debug symbols, lint warnings (inlined from parent-mipl) -->
                 <plugin>
-                    <groupId>com.google.code.maven-replacer-plugin</groupId>
-                    <artifactId>replacer</artifactId>
-                    <version>${version.plugin.replacer}</version>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.plugin.compiler}</version>
+                    <configuration>
+                        <source>17</source>
+                        <target>17</target>
+                        <release>17</release>
+                        <fork>true</fork>
+                        <meminitial>128m</meminitial>
+                        <maxmem>512m</maxmem>
+                        <debug>${compiler.debug}</debug>
+                        <debuglevel>${compiler.debuglevel}</debuglevel>
+                        <forceJavacCompilerUse>${compiler.javac}</forceJavacCompilerUse>
+                        <compilerArgs>
+                            <arg>-Xlint:deprecation</arg>
+                            <arg>-Xlint:unchecked</arg>
+                        </compilerArgs>
+                    </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${version.plugin.resources}</version>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${version.plugin.assembly}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>${version.plugin.war}</version>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${version.plugin.clean}</version>
                 </plugin>
                 <plugin>
-                    <!--
-                        NOTE (2018-05-14): version 2.2 is initially used as it was closer to the latest version of 2.3.1
-                        But the error output is displayed while trying to generate the java files
-
-                        Failed to execute goal org.codehaus.mojo:jaxb2-maven-plugin:2.2:xjc (xjc)
-                        on project mdms-komodo-server: org.xml.sax.SAXNotRecognizedException: Feature
-                        'http://javax.xml.XMLConstants/feature/secure-processing' is not recognized.
-
-                        Hence, it is reverted to 1.5 which has slightly different way of pointing to the xsd files
-                        outputDirectory & schemaDirectory is added and sources tag is commented.
-                    -->
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxb2-maven-plugin</artifactId>
-                    <version>${version.plugin.jaxb2}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxws-maven-plugin</artifactId>
-                    <version>${version.plugin.jaxws}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.sun.xml.ws</groupId>
-                            <artifactId>jaxws-tools</artifactId>
-                            <version>${version.plugin.jaxws.tools}</version>
-                        </dependency>
-                    </dependencies>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${version.plugin.dependency}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>${version.plugin.deploy}</version>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${version.plugin.surefire}</version>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${version.plugin.enforcer}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${version.plugin.install}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${version.plugin.jar}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -169,6 +184,21 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${version.plugin.release}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${version.plugin.resources}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>${version.plugin.scm}</version>
+                    <configuration>
+                        <tag>${project.version}</tag>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${version.plugin.source}</version>
                     <executions>
@@ -183,6 +213,10 @@
                     <configuration>
                         <excludeResources>true</excludeResources>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version.plugin.surefire}</version>
                 </plugin>
                 <!-- flatten-maven-plugin: resolves ${revision} CI-friendly version in published POMs -->
                 <plugin>
@@ -209,6 +243,22 @@
                         <updatePomFile>true</updatePomFile>
                         <flattenMode>resolveCiFriendliesOnly</flattenMode>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <version>${version.plugin.replacer}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxb2-maven-plugin</artifactId>
+                    <version>${version.plugin.jaxb2}</version>
+                </plugin>
+                <!-- Jakarta-compatible JAX-WS plugin for Java 17+ -->
+                <plugin>
+                    <groupId>com.sun.xml.ws</groupId>
+                    <artifactId>jaxws-maven-plugin</artifactId>
+                    <version>${version.plugin.jaxws}</version>
                 </plugin>
                 <!-- GPG signing — required for Maven Central publishing -->
                 <plugin>
@@ -252,6 +302,12 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-scm-plugin</artifactId>
+            </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
@@ -297,42 +353,8 @@
         </profile>
     </profiles>
 
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencyManagement>
         <dependencies>
-<!--            <dependency>-->
-<!--                <groupId>gov.nasa.jpl.ammos.ids.tps</groupId>-->
-<!--                <artifactId>authapi</artifactId>-->
-<!--                <version>${version.authapi}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>gov.nasa.jpl.ammos.ids.tps</groupId>-->
-<!--                <artifactId>cryptoj</artifactId>-->
-<!--                <version>${version.cryptoj}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>gov.nasa.jpl.ammos.ids.tps</groupId>-->
-<!--                <artifactId>jconnect</artifactId>-->
-<!--                <version>${version.jconnect}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>gov.nasa.jpl.ammos.ids.wrp</groupId>-->
-<!--                <artifactId>juneberry</artifactId>-->
-<!--                <version>${version.juneberry}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>c3p0</groupId>
                 <artifactId>c3p0</artifactId>
@@ -407,6 +429,7 @@
                 <artifactId>jbossall-client</artifactId>
                 <version>${version.jbossall-client}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
