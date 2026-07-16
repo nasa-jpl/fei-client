@@ -142,7 +142,7 @@
             <artifactId>dom4j</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.mail</groupId>
+            <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
         </dependency>
         <dependency>
@@ -160,11 +160,6 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <classifier>runtime</classifier>
         </dependency>
         <!-- Jakarta XML Web Services API for Java 17+ -->
         <dependency>
