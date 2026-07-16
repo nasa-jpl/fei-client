@@ -68,7 +68,7 @@
         <version.commons-codec>1.4</version.commons-codec>
         <version.commons-logging>1.0.4</version.commons-logging>
         <version.dom4j>1.6</version.dom4j>
-        <version.javax.mail>1.4.0.v201005080615</version.javax.mail>
+        <version.javax.mail>1.6.2</version.javax.mail>
         <version.mailapi>1.4.3</version.mailapi>
         <version.javax.servlet-api>3.1.0</version.javax.servlet-api>
         <version.jaxen>1.1</version.jaxen>
@@ -394,7 +394,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>javax.mail</groupId>
+                <groupId>com.sun.mail</groupId>
                 <artifactId>javax.mail</artifactId>
                 <version>${version.javax.mail}</version>
             </dependency>
