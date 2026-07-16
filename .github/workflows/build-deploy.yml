@@ -110,8 +110,7 @@ jobs:
       # -----------------------------------------------------------------------
       # Deploy JARs to Maven Central via Sonatype
       #
-      # Publishes: mdms-komodo-client, mdms-komodo-msl-handlers,
-      #            mdms-komodo-client-handler-examples, mdms-komodo-client-war
+      # Publishes: mdms-komodo-client, mdms-komodo-client-handler-examples
       #
       # Prerequisites — add these secrets to the GitHub repo:
       #   OSSRH_USERNAME   : Sonatype Central user token username
@@ -134,7 +133,7 @@ jobs:
             -Dbuildnum=${{ steps.versions.outputs.BUILDNUM }} \
             -Dsha1=${{ steps.versions.outputs.SHA1 }} \
             -Prelease \
-            --projects mdms-komodo-client,mdms-komodo-msl-handlers,mdms-komodo-client-handler-examples,mdms-komodo-client-war \
+            --projects mdms-komodo-client,mdms-komodo-client-handler-examples \
             --also-make \
             javadoc:jar deploy \
             -Dgpg.passphrase="${GPG_PASSPHRASE}" \
