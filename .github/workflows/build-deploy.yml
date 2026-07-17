@@ -54,7 +54,7 @@ jobs:
       # Branch strategy: master <- develop <- feature
       #
       # master branch   →  clean semver                  e.g. 2.5.2
-      # develop branch  →  SNAPSHOT + timestamp          e.g. 2.5.2-SNAPSHOT-202407061423
+      # develop branch  →  SNAP + timestamp               e.g. 2.5.2-SNAP-202407061423
       # feature branch  →  branch name + timestamp       e.g. 2.5.2-feature-login-202407061423
       # -----------------------------------------------------------------------
       - name: Compute version variables
@@ -71,7 +71,7 @@ jobs:
             CHANGELIST=""
             POSTFIX=""
           elif [ "${BRANCH_NAME}" = "develop" ]; then
-            POSTFIX="SNAPSHOT-${TIMESTAMP}"
+            POSTFIX="SNAP-${TIMESTAMP}"
             BUILDNUM=""
             SHA1=""
             CHANGELIST="-${POSTFIX}"
@@ -110,8 +110,7 @@ jobs:
       # -----------------------------------------------------------------------
       # Deploy JARs to Maven Central via Sonatype
       #
-      # Publishes: mdms-komodo-client, mdms-komodo-msl-handlers,
-      #            mdms-komodo-client-handler-examples, mdms-komodo-client-war
+      # Publishes: mdms-komodo-client, mdms-komodo-client-handler-examples
       #
       # Prerequisites — add these secrets to the GitHub repo:
       #   OSSRH_USERNAME   : Sonatype Central user token username
@@ -134,7 +133,7 @@ jobs:
             -Dbuildnum=${{ steps.versions.outputs.BUILDNUM }} \
             -Dsha1=${{ steps.versions.outputs.SHA1 }} \
             -Prelease \
-            --projects mdms-komodo-client,mdms-komodo-msl-handlers,mdms-komodo-client-handler-examples,mdms-komodo-client-war \
+            --projects mdms-komodo-client,mdms-komodo-client-handler-examples \
             --also-make \
             javadoc:jar deploy \
             -Dgpg.passphrase="${GPG_PASSPHRASE}" \
@@ -144,7 +143,7 @@ jobs:
       # GitHub Release for mdms-komodo-client tar.gz and zip
       #
       # master   → tagged release    v<semver>                      e.g. v2.5.2
-      # develop  → pre-release       v<semver>-SNAPSHOT-<timestamp> e.g. v2.5.2-SNAPSHOT-202407061423
+      # develop  → pre-release       v<semver>-SNAP-<timestamp>      e.g. v2.5.2-SNAP-202407061423
       # feature  → pre-release       pre-release-<branch>-<timestamp>
       # -----------------------------------------------------------------------
       - name: Locate release artifacts
@@ -168,7 +167,7 @@ jobs:
             ${{ steps.artifacts.outputs.TARBALL }}
             ${{ steps.artifacts.outputs.ZIPFILE }}
 
-      - name: Release (develop) — update SNAPSHOT pre-release
+      - name: Release (develop) — update SNAP pre-release
         if: github.ref_name == 'develop'
         uses: softprops/action-gh-release@v2
         with:
