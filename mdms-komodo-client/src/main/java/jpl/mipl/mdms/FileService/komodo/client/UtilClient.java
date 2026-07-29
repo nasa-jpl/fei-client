@@ -65,6 +65,7 @@ import jpl.mipl.mdms.FileService.util.FileUtil;
 import jpl.mipl.mdms.FileService.util.PasswordUtil;
 import jpl.mipl.mdms.FileService.util.PrintfFormat;
 import jpl.mipl.mdms.FileService.util.SystemProcess;
+import jpl.mipl.mdms.FileService.net.SecureSocketsUtil;
 
 import jpl.mipl.mdms.utils.logging.Logger;
 
@@ -185,9 +186,10 @@ public class UtilClient
     * 
     * @param args The command line arguments
     */
-   public UtilClient(String[] args) 
+   public UtilClient(String[] args)
    {
-       
+      SecureSocketsUtil.ensureFipsProviderInitialized();
+
       //set reference to args parameter
       this._args = args;
       this._parser = new UtilCmdParser();

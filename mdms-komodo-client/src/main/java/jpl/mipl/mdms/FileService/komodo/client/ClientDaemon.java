@@ -11,6 +11,7 @@ import jpl.mipl.mdms.FileService.komodo.api.Client;
 import jpl.mipl.mdms.FileService.komodo.api.Result;
 import jpl.mipl.mdms.FileService.komodo.api.SessionException;
 import jpl.mipl.mdms.FileService.komodo.util.LoginFile;
+import jpl.mipl.mdms.FileService.net.SecureSocketsUtil;
 
 
 
@@ -27,6 +28,7 @@ public class ClientDaemon
                                                // seconds
     public static void main(String[] args)
     {
+        SecureSocketsUtil.ensureFipsProviderInitialized();
         int sleepMS = 3000; // number of milliseconds to sleep between checks
         logFileName = args[3] + "/FeiPublishDaemon_" + args[1] + "." +
         args[2] + ".log";
