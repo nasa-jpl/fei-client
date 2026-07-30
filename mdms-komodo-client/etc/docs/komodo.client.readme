@@ -2,14 +2,15 @@ File Exchange Interface (FEI) Version 5 Client Software Distribution
 Jet Propulsion Laboratory, Mission Data Management Service (MDMS)
 Created @TIMESTAMP@
 
-Please read the FEI installation and users guide in the docs/pdf 
-directory.
+Documentation is available in the doc/ directory:
 
-PLEASE NOTE that FEI requires version 1.4.2 or above of the Java Runtime
-Environment (JRE).  Please download Java JRE at http://www.java.com or
-http://java.sun.com
+  doc/installation.md                    Installation guide
+  doc/users-guide.md                     User's guide (commands and operations)
+  doc/appendix-a-command-reference.md    Complete command reference
+  doc/appendix-b-troubleshooting.md      Troubleshooting guide
 
-Contact Information:
+PLEASE NOTE that FEI requires OpenJDK 1.8 or higher (Java 8+).
+Download Java from https://adoptium.net/ or https://openjdk.org/
 
-Thomas Huang, thomas.huang@jpl.nasa.gov, (818) 354-3754
-Adrian Tinio, adrian.tinio@jpl.nasa.gov, (818) 393-5995, (818) 354-7511
+For questions, bug reports, or feature requests, please open an issue on GitHub:
+https://github.com/nasa-jpl/fei-client/issues

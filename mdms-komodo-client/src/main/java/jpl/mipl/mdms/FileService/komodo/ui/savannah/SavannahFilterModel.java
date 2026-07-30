@@ -1,4 +1,16 @@
 /*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
+/*
  * Created on Aug 8, 2005
  */
 package jpl.mipl.mdms.FileService.komodo.ui.savannah;
@@ -42,7 +54,7 @@ import jpl.mipl.mdms.utils.logging.Logger;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SavannahFilterModel.java,v 1.2 2013/04/04 21:01:20 ntt Exp $
+
  *
  */
 

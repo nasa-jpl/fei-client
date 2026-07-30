@@ -1,7 +1,14 @@
-/*******************************************************************************
- * Copyright (C) 1999 California Institute of Technology. All rights reserved US
- * Government Sponsorship under NASA contract NAS7-918 is acknowledged
- ******************************************************************************/
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
 
 package jpl.mipl.mdms.FileService.komodo.client;
 
@@ -37,7 +44,7 @@ import jpl.mipl.mdms.utils.logging.Logger;
  * BaseClient side command line interpreter
  *
  * @author G. Turek, T. Huang {Thomas.Huang@jpl.nasa.gov}
- * @version $Id: CCLProcessor.java,v 1.71 2013/03/30 00:06:20 ntt Exp $
+
  */
 public class CCLProcessor extends CLProcessor {
    // Access to the file type.
@@ -384,7 +391,6 @@ public class CCLProcessor extends CLProcessor {
     */
    public void useType() throws SessionException {
 
-
       //Change file type
       String proposedNewConn = this._oneArg.group(2);
       String defaultGroup;
@@ -444,7 +450,6 @@ public class CCLProcessor extends CLProcessor {
          }
       }
    }
-
 
 //   public void useTypeOld() throws SessionException {
 //
@@ -636,7 +641,6 @@ public class CCLProcessor extends CLProcessor {
              this._handleError("Unable to encrypt password.  try again");
          }
 
-
          /* Now, change the password for our Komodo user. */
          this._session.changePassword(oldPassword, encryptedPass);
          this._getResults();
@@ -694,7 +698,6 @@ public class CCLProcessor extends CLProcessor {
                   servergroup = this._session.getDefaultGroup();
           }
 
-
           //-----------------------
 
           //perform login only if not already logged in.  If logged
@@ -741,7 +744,6 @@ public class CCLProcessor extends CLProcessor {
                 throw new SessionException("Filetype " + target
                         + " not found in domain!", Constants.DOMAINLOOKUPERR);
             }
-
 
             //---------------------
             //get capabilities for filetype
@@ -1281,7 +1283,6 @@ public class CCLProcessor extends CLProcessor {
          String servergroup = (this._fileType != null) ?
                                this._fileType.getGroup() :
                                this._session.getDefaultGroup();
-
 
          //new_ntt grab the server info from filetype
          if (servergroup == null) {

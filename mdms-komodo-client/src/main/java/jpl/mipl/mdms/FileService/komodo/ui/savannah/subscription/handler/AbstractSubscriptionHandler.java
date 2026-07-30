@@ -1,4 +1,16 @@
 /*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
+/*
  * Created on Feb 17, 2005
  */
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.subscription.handler;
@@ -8,7 +20,6 @@ import java.util.List;
 import jpl.mipl.mdms.FileService.komodo.api.Client;
 import jpl.mipl.mdms.FileService.komodo.ui.savannah.SavannahModel;
 import jpl.mipl.mdms.FileService.komodo.ui.savannah.subscription.util.HandlerInfo;
-
 
 /**
  * <b>Purpose:</b>
@@ -33,7 +44,7 @@ import jpl.mipl.mdms.FileService.komodo.ui.savannah.subscription.util.HandlerInf
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: AbstractSubscriptionHandler.java,v 1.4 2005/03/31 22:02:02 ntt Exp $
+
  *
  */
 

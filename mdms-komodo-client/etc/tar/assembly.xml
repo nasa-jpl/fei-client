@@ -26,6 +26,15 @@
         </fileSet>
 
         <fileSet>
+            <directory>${project.basedir}${file.separator}etc${file.separator}docs</directory>
+            <outputDirectory>${file.separator}doc</outputDirectory>
+            <includes>
+                <include>*.md</include>
+            </includes>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <fileSet>
             <directory>${project.basedir}${file.separator}etc${file.separator}ssl</directory>
             <outputDirectory>${file.separator}config</outputDirectory>
             <includes>

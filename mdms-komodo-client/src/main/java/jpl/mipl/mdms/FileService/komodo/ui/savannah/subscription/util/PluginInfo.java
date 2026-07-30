@@ -1,4 +1,16 @@
 /*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
+/*
  * Created on Mar 1, 2005
  */
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.subscription.util;
@@ -10,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
@@ -38,7 +49,7 @@ import org.dom4j.Element;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: PluginInfo.java,v 1.6 2008/09/05 19:09:42 ntt Exp $
+
  *
  */
 

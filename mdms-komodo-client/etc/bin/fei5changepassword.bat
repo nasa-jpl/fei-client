@@ -1,5 +1,15 @@
 @echo off
 
+rem Copyright (c) 2026 by the California Institute of Technology.
+rem ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+rem Any commercial use must be negotiated with the Office of Technology
+rem at the California Institute of Technology.
+rem
+rem The technical data in this document (or file) is controlled for export
+rem under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+rem Violations of these laws are subject to fines and penalties under the
+rem Export Administration Act.
+
 rem
 rem # ==================================================================== ###
 rem                                                                          #
@@ -10,15 +20,7 @@ rem  Changes user password for a server group.                               #
 rem  NOTE: The $FEI5 environment variable must point to the directory        #
 rem  containing the domain.fei and SSL keystore files.                       #
 rem                                                                          #
-rem  Copyright (c) 2009 by the California Institute of Technology.           #
-rem  ALL RIGHTS RESERVED.  United States Government Sponsorship              #
-rem  acknowledged. Any commercial use must be negotiated with the            #
-rem  Office of Technology at the California Institute of Technology.         #
 rem                                                                          #
-rem  The technical data in this document (or file) is controlled for         #
-rem  export under the Export Administration Regulations (EAR), 15 CFR,       #
-rem  Parts 730-774. Violations of these laws are subject to fines and        #
-rem  penalties under the Export Administration Act.                          #
 rem                                                                          #
 rem                                                                          #
 rem  Created:                                                                #
@@ -28,7 +30,6 @@ rem  Modifications:                                                          #
 rem                                                                          #
 rem # ==================================================================== ###
 rem 
-rem $Id: $
 rem 
 
 

@@ -1,7 +1,15 @@
-/*******************************************************************************
- * Copyright (C) 1999 California Institute of Technology. All rights reserved US
- * Government Sponsorship under NASA contract NAS7-918 is acknowledged
- ******************************************************************************/
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.services.query.client;
 
 import java.text.ParseException;
@@ -34,7 +42,7 @@ import jpl.mipl.mdms.utils.logging.Logger;
  * Client end to the FeiQ web service
  * 
  * @author Nicholas Toole (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: QueryClient.java,v 1.8 2015/01/30 01:52:14 awt Exp $
+
  */
 
 public class QueryClient implements Closable 

@@ -1,5 +1,15 @@
 @echo off
 
+rem Copyright (c) 2026 by the California Institute of Technology.
+rem ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+rem Any commercial use must be negotiated with the Office of Technology
+rem at the California Institute of Technology.
+rem
+rem The technical data in this document (or file) is controlled for export
+rem under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+rem Violations of these laws are subject to fines and penalties under the
+rem Export Administration Act.
+
 rem
 rem # ==================================================================== ###
 rem                                                                          #
@@ -9,15 +19,7 @@ rem  Function:                                                               #
 rem  Read in list of file names from standard-in and issue the specfiied     #
 rem  operation on those files.                                               #
 rem                                                                          #
-rem  Copyright (c) 2006 by the California Institute of Technology.           #
-rem  ALL RIGHTS RESERVED.  United States Government Sponsorship              #
-rem  acknowledged. Any commercial use must be negotiated with the            #
-rem  Office of Technology at the California Institute of Technology.         #
 rem                                                                          #
-rem  The technical data in this document (or file) is controlled for         #
-rem  export under the Export Administration Regulations (EAR), 15 CFR,       #
-rem  Parts 730-774. Violations of these laws are subject to fines and        #
-rem  penalties under the Export Administration Act.                          #
 rem                                                                          #
 rem                                                                          #
 rem  Created:                                                                #
@@ -28,7 +30,6 @@ rem  Apr 27, 2006 by ntt: Fixed spaces in dirnames issue                     #
 rem                                                                          #
 rem # ==================================================================== ###
 rem 
-rem $Id: fei5accept.bat,v 1.2 2005/02/03 22:49:34 ntt Exp $
 rem 
 
 

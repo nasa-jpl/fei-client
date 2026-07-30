@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah;
 
 import java.awt.BorderLayout;
@@ -70,7 +82,7 @@ import jpl.mipl.mdms.utils.logging.Logger;
  * </PRE>
  *
  * @author Nicholas Toole	(Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SavannahFeiList.java,v 1.44 2013/03/30 00:06:21 ntt Exp $
+
  *
  */
 
@@ -1151,7 +1163,6 @@ public class SavannahFeiList extends JPanel implements SavannahList,
 
     }
 
-
     public void filterChange(SavannahListFilter filter)
     {
         if (filter.getName().equals("FEI_FILTER"))
@@ -1186,14 +1197,11 @@ public class SavannahFeiList extends JPanel implements SavannahList,
         lPanel.setLayout(new BoxLayout(lPanel, BoxLayout.Y_AXIS));
         rPanel.setLayout(new BoxLayout(rPanel, BoxLayout.Y_AXIS));
 
-
         lPanel.add(new JLabel(" Filename "));
         lPanel.add(new JLabel(" Filesize "));
         lPanel.add(new JLabel(" Modified "));
         lPanel.add(new JLabel(" Filetype "));
         lPanel.add(new JLabel(" Comment  "));
-
-
 
         rPanel.add(new JLabel(" = "+element.getName()+" "));
         rPanel.add(new JLabel(" = "+element.getSize()+ " bytes"));
@@ -1204,7 +1212,6 @@ public class SavannahFeiList extends JPanel implements SavannahList,
         String comment = element.getComment();
         comment = (comment == null) ? "\"\"" : comment;
         rPanel.add(new JLabel(" = "+comment+ " "));
-
 
         lPanel.setOpaque(false);
         rPanel.setOpaque(false);
@@ -1221,7 +1228,6 @@ public class SavannahFeiList extends JPanel implements SavannahList,
     //=====================================================================
     //=====================================================================
     //=====================================================================
-
 
     //=====================================================================
 
@@ -1520,7 +1526,6 @@ public class SavannahFeiList extends JPanel implements SavannahList,
 
          //--------------------------------------------------------------------
 
-
          public FeiListToolbar(SavannahModel model)
          {
              _model = model;
@@ -1576,7 +1581,6 @@ public class SavannahFeiList extends JPanel implements SavannahList,
               _commentButton.addActionListener(new ActionListener()
                       {public void actionPerformed(ActionEvent ae){;}});
               _toolbar.add(_commentButton);
-
 
               _toolbar.addSeparator();
 
@@ -1746,7 +1750,6 @@ public class SavannahFeiList extends JPanel implements SavannahList,
               String propName = pce.getPropertyName();
 
               //--------------------------
-
 
               //--------------------------
           }

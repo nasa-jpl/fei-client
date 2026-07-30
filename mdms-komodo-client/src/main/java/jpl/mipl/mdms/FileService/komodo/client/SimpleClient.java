@@ -1,4 +1,16 @@
 /*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
+/*
  * Created on Sep 14, 2006
  */
 package jpl.mipl.mdms.FileService.komodo.client;
@@ -36,7 +48,7 @@ import jpl.mipl.mdms.FileService.komodo.util.LoginFile;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SimpleClient.java,v 1.7 2012/02/28 23:29:26 awt Exp $
+
  *
  */
 
@@ -274,7 +286,6 @@ public class SimpleClient
                 this._client.set(Client.OPTION_RESTART, true);
                 //this._logger.info("File resume transfer enabled");
             }
-
 
             int transId = this._client.show(fileRegEx);
             boolean success = true;

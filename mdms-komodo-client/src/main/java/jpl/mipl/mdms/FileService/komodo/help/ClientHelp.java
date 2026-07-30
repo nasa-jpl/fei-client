@@ -1,7 +1,15 @@
-/******************************************************************************
- * Copyright (C) 1999 California Institute of Technology. All rights re served
- * US Government Sponsorship under NASA contract NAS7-918 is acknowledged
- *****************************************************************************/
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.help;
 
 import java.io.IOException;
@@ -20,7 +28,7 @@ import org.xml.sax.SAXException;
  *  Simple help utility for Komodo to handle user help requests
  *
  *  @author G.Turek, R. Pavlovsky
- *  @version $Id: ClientHelp.java,v 1.10 2005/02/09 01:57:18 ntt Exp $
+
  */
 public class ClientHelp {
     private HelpXMLParser _xmlParser;
