@@ -18,6 +18,7 @@
 
     <properties>
         <maven.build.timestamp.format>MMMM yyyy</maven.build.timestamp.format>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
     </properties>
 
     <build>
