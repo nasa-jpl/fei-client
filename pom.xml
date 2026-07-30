@@ -24,8 +24,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.build.timestamp.format>MMMM yyyy</maven.build.timestamp.format>
         <!-- Tagging for CI -->
-        <semver>2.5.2</semver>
+        <semver>2.6.2</semver>
         <revision>${semver}${buildnum}${sha1}${changelist}</revision>
         <!-- Version suffix properties (set by CI; defaults produce a local SNAPSHOT build) -->
         <buildnum>b0</buildnum>
