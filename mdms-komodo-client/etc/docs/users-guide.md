@@ -14,10 +14,11 @@
 
 1. [Introduction](#1-introduction)
 2. [Getting Started](#2-getting-started)
-3. [File Operations](#3-file-operations)
-4. [Subscription and Notification](#4-subscription-and-notification)
-5. [Administration Commands](#5-administration-commands)
-6. [Graphical User Interface](#6-graphical-user-interface)
+3. [Authentication](#3-authentication)
+4. [File Operations](#4-file-operations)
+5. [Subscription and Notification](#5-subscription-and-notification)
+6. [Administration Commands](#6-administration-commands)
+7. [Graphical User Interface (Savannah)](#7-graphical-user-interface-savannah)
 
 ---
 
@@ -25,17 +26,19 @@
 
 The File Exchange Interface (FEI) is a client-server system developed at JPL's Mission Data Management Service (MDMS) for transferring files between clients and a central server. FEI provides:
 
-- Reliable file add, get, delete, and replace operations
+- Reliable file add, get, delete, replace, and rename operations
 - File type management and access control
-- Event-driven notification and subscription
+- Event-driven subscription and notification
 - SSL-secured communications
-- Both command-line and graphical interfaces
+- Both command-line and graphical (Savannah) interfaces
 
-### Architecture Overview
+### Key Concepts
 
-FEI uses a domain-based configuration model. A **domain** is a named FEI server instance. Clients locate servers via `domain.fei`, a configuration file that maps domain names to hostnames and ports.
+**Server group** — A named FEI server instance. Clients locate servers via `domain.fei`, a configuration file in `$FEI5/config/` that maps server group names to hostnames and ports.
 
-All communications are encrypted using SSL/TLS. The keystore (`mdms-fei.keystore`) and server certificate (`public.der`) are obtained from your FEI server administrator.
+**File type** — A named container on a server group for storing and retrieving files. Most commands address a file type as `servergroup:filetype`.
+
+**`$FEI5`** — An environment variable that must point to the directory containing `domain.fei` and the SSL keystore files. All scripts in `bin/` check for this variable at startup.
 
 ---
 
@@ -44,48 +47,119 @@ All communications are encrypted using SSL/TLS. The keystore (`mdms-fei.keystore
 ### Prerequisites
 
 - FEI client installed per the [Installation Guide](installation.md)
+- `$FEI5` environment variable set and `$FEI5/bin` on your `PATH`:
+  ```bash
+  source fei5/use_FEI5.sh      # bash/sh
+  source fei5/use_FEI5.csh     # csh/tcsh
+  ```
 - `domain.fei` and SSL keystore files in `$FEI5/config/`
 - A valid FEI username and password (obtained from your server administrator)
-- `$FEI5` environment variable set and `$FEI5/bin` on your `PATH`
 
-### Your First Command
+### Command Syntax
 
-List available file types on a domain:
+FEI commands use **bare keyword tokens**, not dash-prefixed flags. For example:
 
-```bash
-fei5filetypes <domain>
+```
+fei5get servergroup:filetype '*.fits' output /data/output after '2024-01-01 00:00:00'
 ```
 
-List files in a file type:
+Get help for any command by appending `help`:
 
-```bash
-fei5list <domain>:<filetype>
+```
+fei5get help
+fei5add help
 ```
 
-Example:
+### Quick Workflow
 
 ```bash
-fei5list mymission:science_data
+# 1. Log in (stores credentials for subsequent commands)
+fei5kinit
+
+# 2. See what file types are available
+fei5filetypes servergroup
+
+# 3. List files in a file type
+fei5list servergroup:filetype
+
+# 4. Download files
+fei5get servergroup:filetype output /local/dir
+
+# 5. Log out when done
+fei5kdestroy
 ```
-
-### Authentication
-
-Most FEI commands accept credentials via:
-
-1. **Interactive prompt** — omit `-u`/`-p` flags; you will be prompted
-2. **Command-line flags** — `-u <username> -p <password>` (not recommended for scripts)
-3. **User token** — see `fei5encrypt` for generating encrypted credential tokens
 
 ---
 
-## 3. File Operations
+## 3. Authentication
 
-### 3.1 Adding Files
+FEI authentication is a two-step process: first obtain a session token with `fei5kinit`, then run file operations. Commands read the stored token automatically so you do not need to supply credentials each time.
 
-Add one or more files to an FEI file type:
+### Step 1 — Log In (`fei5kinit`)
 
-```bash
-fei5add [options] <domain>:<filetype> <file-expression>
+```
+fei5kinit [<username> [<server group>]]
+```
+
+Both arguments are optional. If omitted, `fei5kinit` prompts interactively:
+
+```
+Server group>> mymission
+User name>> jsmith
+Password>>
+```
+
+The password prompt is masked. `fei5kinit` authenticates against the server using the server's public key for encryption, then writes an encrypted token to `~/.komodo/login`. This token is used automatically by all subsequent commands.
+
+If your server has multiple server groups, run `fei5kinit` once per server group.
+
+### Step 2 — Run Commands
+
+After `fei5kinit`, all commands look up credentials from `~/.komodo/login` automatically. You can also supply credentials inline on any command as bare `user` and `password` tokens:
+
+```
+fei5list servergroup:filetype user jsmith password mysecretpass
+```
+
+Inline credentials take precedence over the stored token. Passing a plaintext password on the command line is not recommended for shared systems.
+
+### Listing Stored Credentials
+
+```
+fei5klist
+```
+
+Shows which server groups have active stored tokens and their expiry.
+
+### Logging Out (`fei5kdestroy`)
+
+```
+fei5kdestroy [<server group>]
+```
+
+Removes stored credentials for the specified server group. If no server group is given, removes all stored credentials.
+
+### Changing Your Password
+
+```
+fei5changepassword <server group>
+```
+
+Prompts for your current password, then for a new password (entered twice). Updates both the server and the local credential store.
+
+---
+
+## 4. File Operations
+
+### 4.1 Adding Files
+
+```
+fei5add [servergroup:]filetype <file expression>
+        [before|after <datetime>] | [between <datetime1> and <datetime2>]
+        [format '<date format>'] [comment '<comment text>']
+        [crc] [receipt] [autodelete] [filehandler] [help]
+
+fei5add using <option file>
 ```
 
 **Examples:**
@@ -94,63 +168,76 @@ fei5add [options] <domain>:<filetype> <file-expression>
 # Add a single file
 fei5add mymission:science_data data001.fits
 
-# Add all .fits files
-fei5add mymission:science_data "*.fits"
+# Add all .fits files with a comment
+fei5add mymission:science_data '*.fits' comment 'daily downlink'
 
-# Add with a comment
-fei5add -c "daily downlink" mymission:science_data data001.fits
+# Add files modified after a date, with CRC verification
+fei5add mymission:science_data '*.fits' after '2024-01-01 00:00:00' crc
+
+# Add from an option file (batch mode)
+fei5add using /path/to/options.txt
 ```
 
-**Common options:**
-
-| Option | Description |
+| Keyword | Description |
 |---|---|
-| `-u <user>` | Username |
-| `-p <pass>` | Password |
-| `-c <comment>` | Attach a comment to the file |
-| `-R` | Recursive (add files in subdirectories) |
-| `-r` | Replace if file already exists |
-| `-v` | Verbose output |
+| `comment '<text>'` | Attach a comment to the added file(s) |
+| `crc` | Compute and store a CRC checksum on add |
+| `receipt` | Request a delivery receipt from the server |
+| `autodelete` | Delete the local file after successful add |
+| `filehandler` | Use a configured file handler |
+| `before`/`after`/`between...and` | Filter files by modification date |
+| `format '<fmt>'` | Date format string for the date filter |
 
-### 3.2 Retrieving Files
+### 4.2 Retrieving Files
 
-Download files from an FEI file type:
+```
+fei5get [servergroup:]filetype ['<file expression>']
+        [output <path>] [before|after <datetime>] | [between <datetime1> and <datetime2>]
+        [format '<date format>'] [crc] [saferead] [receipt]
+        [replace|version] [diff] [query <queryfile>]
+        [replicate] [replicateroot <rootdir>] [filehandler] [help]
 
-```bash
-fei5get [options] <domain>:<filetype> [file-expression]
+fei5get using <option file>
 ```
 
 **Examples:**
 
 ```bash
-# Get all files
+# Get all files into current directory
 fei5get mymission:science_data
 
-# Get a specific file
-fei5get mymission:science_data data001.fits
+# Get files matching a pattern to a specific directory
+fei5get mymission:science_data '*.fits' output /data/output
 
-# Get files matching a pattern, output to a directory
-fei5get -o /data/output mymission:science_data "data*.fits"
+# Get files added after a date, replacing any local copies
+fei5get mymission:science_data after '2024-01-01 00:00:00' replace
 
-# Get only files newer than a date
-fei5get -s "2024-01-01 00:00:00" mymission:science_data
+# Get with CRC verification
+fei5get mymission:science_data crc
 ```
 
-**Common options:**
-
-| Option | Description |
+| Keyword | Description |
 |---|---|
-| `-o <dir>` | Output directory (default: current directory) |
-| `-s <datetime>` | Start date filter (format: `YYYY-MM-DD HH:MM:SS`) |
-| `-e <datetime>` | End date filter |
-| `-n` | Retrieve newest N files |
-| `-x` | Delete files from server after retrieval |
-| `-v` | Verbose output |
+| `output <path>` | Local directory for downloaded files (default: current directory) |
+| `before`/`after`/`between...and` | Filter by server-side add date |
+| `replace` | Overwrite local file if it exists |
+| `version` | Download into a versioned filename |
+| `crc` | Verify checksum after download |
+| `saferead` | Lock file on server during download |
+| `receipt` | Request a delivery receipt |
+| `diff` | Only get files that differ from local copies |
+| `replicate` | Preserve server-side directory structure |
+| `replicateroot <dir>` | Root directory for replicated structure |
+| `query <file>` | Apply a query filter file |
+| `filehandler` | Invoke a configured file handler on receipt |
 
-### 3.3 Listing Files
+### 4.3 Listing Files
 
-```bash
-fei5list [options] <domain>:<filetype> [file-expression]
+```
+fei5list [servergroup:]filetype ['<file expression>']
+         [before|after <datetime>] | [between <datetime1> and <datetime2>]
+         [format '<date format>'] [long | verylong]
+         [query <queryfile>] [filehandler] [help]
 ```
 
 **Examples:**
@@ -159,202 +246,278 @@ fei5list [options] <domain>:<filetype> [file-expression]
 # List all files
 fei5list mymission:science_data
 
-# List files with checksums
-fei5list -c mymission:science_data
+# List files matching a pattern
+fei5list mymission:science_data '*.fits'
 
-# List files modified after a date
-fei5list -s "2024-01-01 00:00:00" mymission:science_data
+# Long listing (includes size, date, comment)
+fei5list mymission:science_data long
+
+# Very long listing (includes CRC)
+fei5list mymission:science_data verylong
+
+# List files added after a date
+fei5list mymission:science_data after '2024-01-01 00:00:00'
 ```
 
-### 3.4 Deleting Files
+### 4.4 Deleting Files
+
+```
+fei5delete [servergroup:]filetype '<file expression>'
+           [filehandler] [help]
+
+fei5delete using <option file>
+```
+
+> **Caution:** Deletion is permanent.
 
 ```bash
-fei5delete [options] <domain>:<filetype> <file-expression>
+fei5delete mymission:science_data 'data001.fits'
+fei5delete mymission:science_data '*.tmp'
 ```
 
-> **Caution:** Deletion is permanent. Verify the file expression before running.
+### 4.5 Replacing Files
 
-### 3.5 Replacing Files
-
-Replace an existing file with a new version:
+```
+fei5replace [servergroup:]filetype <file expression>
+            [before|after <datetime>] | [between <datetime1> and <datetime2>]
+            [format '<date format>'] [comment '<comment text>']
+            [crc] [receipt] [autodelete] [diff] [filehandler] [help]
+```
 
 ```bash
-fei5replace [options] <domain>:<filetype> <file>
+fei5replace mymission:science_data data001.fits comment 'v2 correction'
 ```
 
-### 3.6 Renaming Files
+### 4.6 Renaming Files
+
+```
+fei5rename [servergroup:]filetype <old name> <new name> [help]
+```
 
 ```bash
-fei5rename [options] <domain>:<filetype> <old-name> <new-name>
+fei5rename mymission:science_data data001_raw.fits data001.fits
 ```
 
-### 3.7 Adding Comments
+### 4.7 Adding Comments
 
-Attach a comment to an existing file:
+```
+fei5comment [servergroup:]filetype <filename> '<comment text>' [help]
+```
 
 ```bash
-fei5comment [options] <domain>:<filetype> <filename> "<comment text>"
+fei5comment mymission:science_data data001.fits 'reprocessed 2024-06-01'
 ```
 
-### 3.8 Checking File Integrity
+### 4.8 Checking File Integrity
 
-Verify CRC checksums of files in a file type:
+Compute and display CRC checksums for files on the server:
 
-```bash
-fei5crc [options] <domain>:<filetype> [file-expression]
+```
+fei5crc [servergroup:]filetype ['<file expression>'] [help]
 ```
 
-Check for file discrepancies:
+Check for discrepancies between the server catalog and stored files:
 
-```bash
-fei5check [options] <domain>:<filetype>
-fei5checkfiles [options] <domain>:<filetype>
+```
+fei5check [servergroup:]filetype [help]
+fei5checkfiles [servergroup:]filetype [help]
 ```
 
-### 3.9 Displaying File Contents
+### 4.9 Displaying File Contents
 
-Print the contents of a file to stdout (for text files):
+Print a file's contents to standard output (useful for small text files):
 
-```bash
-fei5display [options] <domain>:<filetype> <filename>
 ```
+fei5display [servergroup:]filetype <filename> [help]
+```
+
+### 4.10 Listing File Types
+
+```
+fei5filetypes '[servergroup:][<filetype expression>]'
+fei5filetypes srvgroups
+```
+
+`srvgroups` lists server groups instead of file types within a server group.
 
 ---
 
-## 4. Subscription and Notification
+## 5. Subscription and Notification
 
-FEI supports event-driven file delivery through subscriptions. When subscribed to a file type, the client is notified (and can automatically retrieve) files as they are added to the server.
+FEI supports event-driven file delivery. When subscribed to a file type, the client continuously polls the server and automatically downloads files as they are added.
 
-### Subscribing
+### Subscribing (`fei5subscribe`)
 
-```bash
-fei5subscribe [options] <domain>:<filetype>
+```
+fei5subscribe [servergroup:]filetype
+              [output <path>] [restart] [using <option file>]
+              [pull|push] [replace|version] [format '<date format>']
+              [query <queryfile>] [replicate] [replicateroot <rootdir>]
+              [filehandler] [diff] [help]
 ```
 
-The subscription process runs continuously. Files added to the file type after the subscription is established are automatically delivered to the local output directory.
+The subscription runs continuously until interrupted (Ctrl-C). Files added to the file type after the subscription starts are automatically downloaded to `output`.
 
-**Common options:**
+**Examples:**
 
-| Option | Description |
+```bash
+# Subscribe and write files to /data/incoming
+fei5subscribe mymission:science_data output /data/incoming
+
+# Subscribe with restart (resume from last known position after reconnect)
+fei5subscribe mymission:science_data output /data/incoming restart
+
+# Subscribe and invoke a script on each received file
+fei5subscribe mymission:science_data using /path/to/subscribe.opts
+```
+
+**Option file keywords** (one per line in the option file):
+
+| Keyword | Description |
 |---|---|
-| `-o <dir>` | Output directory for received files |
-| `-n` | Pull newest available file on subscribe |
-| `-d` | Delete file from server after receipt |
-| `-v` | Verbose output |
+| `crc` | Verify CRC on receipt |
+| `diff` | Only retrieve files that differ locally |
+| `invoke <command>` | Shell command to run after each file is received |
+| `invokeExitOnError` | Stop subscription if the invoked command exits non-zero |
+| `invokeAsync` | Run invoked command asynchronously |
+| `logFile <filename>` | Write subscription log to file |
+| `logFileRolling <interval>` | Roll log file at: `monthly`, `weekly`, `daily`, `hourly`, `minutely`, `halfdaily` |
+| `mailMessageFrom <addr>` | Send per-file email notification from this address |
+| `mailMessageTo <addr,...>` | Send per-file email notification to these addresses |
+| `mailReportAt <hh:mm am/pm,...>` | Send summary report at these times |
+| `mailReportTo <addr,...>` | Send summary report to these addresses |
+| `mailSMTPHost <host>` | SMTP relay host for email notifications |
+| `mailSilentReconnect` | Suppress reconnection notification emails |
+| `receipt` | Request delivery receipt from server |
+| `replace` | Overwrite local file if it already exists |
+| `saferead` | Lock file on server during download |
+| `version` | Download into a versioned filename |
 
-### Notification Without Retrieval
+### Auto-Restarting Subscription Daemon (`fei5guardian`)
 
-To receive notifications without downloading files:
+`fei5guardian` wraps `fei5subscribe` and automatically restarts it if it exits due to a network error or server disconnect:
 
-```bash
-fei5notify [options] <domain>:<filetype>
+```
+fei5guardian [servergroup:]filetype [output <path>] [using <option file>] [help]
 ```
 
-### Handlers
+Available on Unix/Linux/macOS only.
 
-FEI supports pluggable file handlers that execute automatically on file receipt. See `mdms-komodo-client-handler-examples/` in the source repository for example handler implementations.
+### Notification Without Download (`fei5notify`)
 
-To list available handlers configured for your client:
+Prints notification events to stdout without downloading files:
 
-```bash
+```
+fei5notify [servergroup:]filetype [help]
+```
+
+### File Handlers
+
+FEI supports pluggable handlers that execute automatically on file receipt. To list handlers configured for your installation:
+
+```
 fei5showhandlers
 ```
 
+See `mdms-komodo-client-handler-examples/` in the source repository for example handler implementations.
+
 ---
 
-## 5. Administration Commands
+## 6. Administration Commands
 
 These commands require administrative privileges on the FEI server.
 
 ### File Type Management
 
 ```bash
-# Register a new file type
-fei5register [options] <domain>:<filetype>
+# Register a new file type (admin)
+fei5register [servergroup:]filetype [help]
 
-# Unregister a file type
-fei5unregister [options] <domain>:<filetype>
+# Unregister a file type (admin)
+fei5unregister [servergroup:]filetype [help]
 
-# List all registered file types
-fei5filetypes <domain>
+# Lock a file type — disables add and delete (admin)
+fei5locktype [servergroup:]filetype [help]
 
-# Lock a file type (disables add/delete)
-fei5locktype [options] <domain>:<filetype>
-
-# Unlock a file type
-fei5unlocktype [options] <domain>:<filetype>
+# Unlock a file type (admin)
+fei5unlocktype [servergroup:]filetype [help]
 ```
 
-### User and Access Management
+### User Management
 
 ```bash
-# General administration operations
-fei5admin [options] <domain>
+# Accept a pending user registration (admin)
+fei5accept [servergroup:]filetype for <add|replace|get|delete>
+           [output <path>] [crc] [saferead] [autodelete]
+           [replace|version] [diff] [help]
 
-# Change your password
-fei5changepassword [options] <domain>
-
-# Accept a pending user registration
-fei5accept [options] <domain> <username>
+# General administration
+fei5admin [help]
 ```
 
-### Encryption and Credentials
+### Reference
 
-Encrypt a password for use in automated scripts:
+Display a quick reference card listing all commands:
 
-```bash
-fei5encrypt
 ```
-
-This outputs an encrypted token that can be used in place of a plaintext password with the `-p` option in other commands.
-
-### Clean Up Local State
-
-Remove locally cached FEI state files:
-
-```bash
-fei5makeclean [options]
+fei5reference
 ```
-
-### Reference and Help
-
-Display the reference card for all commands:
-
-```bash
-fei5 --help
-```
-
-See [Appendix A — Command Reference](appendix-a-command-reference.md) for a complete listing of all commands and their options.
 
 ---
 
-## 6. Graphical User Interface
+## 7. Graphical User Interface (Savannah)
 
-FEI includes a Swing-based graphical client called **Savannah**.
+FEI includes a Swing-based GUI called **Savannah**.
 
-### Launching the GUI
+### Launching
 
 ```bash
 fei5gui
 ```
 
-### Main Window
-
-The Savannah GUI provides:
-
-- A file browser panel showing FEI file types and their contents
-- Drag-and-drop support for uploading and downloading files
-- Filter controls for searching files by name, date range, or CRC
-- A subscription panel for monitoring live file arrivals
-- A configuration panel for managing server connections
+Savannah requires `$FEI5` to be set. A 3-second splash screen is shown while the application initializes.
 
 ### Authentication
 
-On first launch, Savannah will prompt for a domain, username, and password. Credentials can be saved (encrypted) in the local configuration store.
+On launch, Savannah presents a login dialog for the server group, username, and password. Three authentication modes are supported depending on server configuration:
 
-### Configuration
+- **Standard** — username and password
+- **Encrypted** — password is encrypted with the server's public key before transmission
+- **Token** — uses an existing session token (interoperates with `fei5kinit`)
 
-Savannah stores its configuration in `~/.mdms/` (Unix/macOS) or `%USERPROFILE%\.mdms\` (Windows). This includes saved server profiles, window layout preferences, and cached credentials.
+### Main Window
+
+The main window is divided into two primary panels:
+
+**Remote (FEI server) panel:**
+- Displays the connected server group and available file types
+- Lists files in the selected file type (name, size, date, comment, CRC)
+- Filter bar for searching by filename pattern and/or date range (`long`/`verylong` detail levels)
+- Toolbar buttons for common operations: get, add, delete, replace, rename, comment
+
+**Local directory panel:**
+- Browse the local filesystem
+- Drag files from local panel to the remote panel to upload (add)
+- Drag files from the remote panel to local panel to download (get)
+
+### Subscriptions
+
+The subscription panel (accessible from the menu) allows you to configure and monitor continuous file-delivery subscriptions against one or more file types. Each subscription entry shows its status (running/stopped/error) and a live count of received files.
+
+### Logging
+
+An in-application log panel shows real-time client activity. Log level and output file are configured via `$FEI5/config/mdmsgui.lcf`.
+
+### Look and Feel
+
+The GUI look and feel can be changed with the JVM property `komodo.ui.lookandfeel`:
+
+```bash
+# Use the native platform look and feel
+java -Dkomodo.ui.lookandfeel=native ... fei5gui
+
+# Use the cross-platform (Java Metal) look and feel (default)
+```
 
 ---
 

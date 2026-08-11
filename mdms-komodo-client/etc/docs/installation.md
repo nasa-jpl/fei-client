@@ -9,10 +9,11 @@
 ## Table of Contents
 
 1. [Requirements](#1-requirements)
-2. [Installation on Unix/Linux/macOS](#2-installation-on-unixlinuxmacos)
-3. [Installation on Windows](#3-installation-on-windows)
-4. [Verifying the Installation](#4-verifying-the-installation)
-5. [Support](#5-support)
+2. [Distribution Layout](#2-distribution-layout)
+3. [Installation on Unix/Linux/macOS](#3-installation-on-unixlinuxmacos)
+4. [Installation on Windows](#4-installation-on-windows)
+5. [Verifying the Installation](#5-verifying-the-installation)
+6. [Support](#6-support)
 
 ---
 
@@ -20,7 +21,7 @@
 
 ### Java
 
-FEI requires **OpenJDK 1.8 or higher** (Java 8+). Download from:
+FEI requires **OpenJDK 17 or higher** (Java 17+). Download from:
 
 - <https://adoptium.net/>
 - <https://openjdk.org/>
@@ -44,7 +45,73 @@ The FEI client is distributed as:
 
 ---
 
-## 2. Installation on Unix/Linux/macOS
+## 2. Distribution Layout
+
+After extraction, the `fei5/` directory contains:
+
+```
+fei5/
+├── README                               Top-level readme (this file in the archive)
+├── use_FEI5.sh                          Environment setup script (bash/sh)
+├── use_FEI5.csh                         Environment setup script (csh/tcsh)
+├── bin/                                 Client command scripts
+│   ├── fei5                             Main entry point
+│   ├── fei5add                          Add files
+│   ├── fei5get                          Retrieve files
+│   ├── fei5list                         List files
+│   ├── fei5delete                       Delete files
+│   ├── fei5replace                      Replace files
+│   ├── fei5rename                       Rename files
+│   ├── fei5comment                      Add comments to files
+│   ├── fei5crc                          Checksum verification
+│   ├── fei5check / fei5checkfiles       Integrity checks
+│   ├── fei5display                      Print file contents
+│   ├── fei5subscribe                    Subscribe to file-arrival events
+│   ├── fei5notify                       Notification without download
+│   ├── fei5guardian                     Auto-restarting subscription daemon
+│   ├── fei5filetypes                    List registered file types
+│   ├── fei5register / fei5unregister    Register/unregister file types (admin)
+│   ├── fei5locktype / fei5unlocktype    Lock/unlock file types (admin)
+│   ├── fei5admin                        General administration
+│   ├── fei5accept                       Accept user registrations (admin)
+│   ├── fei5changepassword               Change password
+│   ├── fei5encrypt                      Encrypt credentials for scripts
+│   ├── fei5gui                          Launch Savannah graphical client
+│   ├── fei5kinit / fei5klist / fei5kdestroy  Kerberos credential management
+│   ├── fei5makeclean                    Remove local cached state
+│   ├── fei5publish                      Publish file type definition
+│   ├── fei5reference                    Quick reference card
+│   ├── fei5showhandlers                 List configured file handlers
+│   ├── pwdclient                        Password management utility
+│   └── ...                             (each command also has a .sh variant)
+├── config/                              Site configuration files
+│   ├── domain.fei                       FEI domain/server map (site-specific)
+│   ├── mdms-fei.keystore                SSL keystore (site-specific)
+│   ├── public.der                       Server SSL certificate
+│   ├── mdmsgui.lcf                      GUI logging configuration
+│   ├── mdms.lcf                         Client logging configuration
+│   ├── mdmsconfig.sh                    Shell environment config
+│   ├── mdmsconfig.pm                    Perl environment config
+│   ├── krb5.conf                        Kerberos configuration (if used)
+│   └── pwdclient.conf                   Password client configuration
+├── doc/                                 Documentation (Markdown)
+│   ├── installation.md                  This guide
+│   ├── users-guide.md                   User's guide
+│   ├── appendix-a-command-reference.md  Command reference
+│   ├── appendix-b-troubleshooting.md    Troubleshooting
+│   └── pdf/                             Original PDF documentation
+│       ├── komodo_installation.pdf
+│       └── komodo_users.pdf
+└── lib/                                 Java libraries
+    ├── mdms-komodo-client-<version>.jar Main client JAR
+    └── *.jar                            Runtime dependencies
+```
+
+> **Windows distribution** (`.zip`): same layout, but `use_FEI5.bat` replaces the shell scripts and `bin/` contains only `.bat` variants of each command.
+
+---
+
+## 3. Installation on Unix/Linux/macOS
 
 ### Step 1: Extract the Distribution
 
@@ -85,7 +152,7 @@ The `$FEI5` environment variable must point to the directory containing `domain.
 
 ---
 
-## 3. Installation on Windows
+## 4. Installation on Windows
 
 ### Step 1: Extract the Distribution
 
@@ -109,7 +176,7 @@ Copy your site-specific `domain.fei` and SSL keystore files into `fei5\config\`.
 
 ---
 
-## 4. Verifying the Installation
+## 5. Verifying the Installation
 
 After installation, verify that the client commands are accessible:
 
@@ -121,7 +188,7 @@ If the command is found and displays usage information, the installation is succ
 
 ---
 
-## 5. Support
+## 6. Support
 
 For questions, bug reports, or feature requests, please open an issue on GitHub:
 
