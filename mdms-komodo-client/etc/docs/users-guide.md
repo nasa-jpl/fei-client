@@ -580,11 +580,19 @@ set <parameter> {on|off}
 
 When `restart` is on, two things happen:
 
-1. **Last-query timestamp persistence** — after each successful `getAfter` or subscription run the timestamp of the last received file is saved to `~/.komodo/<group>_<filetype>.restart`. On the next run the client automatically resumes from that point, so you only receive files that arrived after the last run.
+1. **Last-query timestamp persistence** — after each successful retrieval the timestamp of the last received file is saved to a cache file inside a `.shadow/` subdirectory of the output directory (e.g. `<outputDir>/.shadow/.<servergroup>.<filetype>.restart`). A legacy fallback location `$HOME/.komodo/<filetype>.restart` is also checked on startup for backward compatibility. On the next run the client resumes from the saved timestamp, so only files that arrived after the last run are retrieved.
 
-2. **Partial-transfer resume** — if a file transfer is interrupted mid-download, the client records how many bytes were received. On retry the server resumes sending from that byte offset rather than restarting from the beginning. The resume offset is the size of the already-downloaded partial file on disk.
+2. **Partial-transfer resume** — if a file transfer is interrupted mid-download, the client records how many bytes were received (the size of the partial file on disk). On retry the server resumes sending from that byte offset rather than restarting from the beginning.
 
-For `getAfter`, `getLatest`, and the subscription commands, `restart` alone is sufficient. For `getBetween` and `getLatest` variants, `computeChecksum` must also be enabled for byte-offset resume to activate. In all cases, enabling `computeChecksum` alongside `restart` is recommended for data integrity.
+Whether `restart` alone is sufficient for byte-offset resume depends on the command:
+
+| Command | `restart` alone sufficient? |
+|---|---|
+| `get`, `getAfter` | Yes |
+| `fei5subscribe` (subscription) | Yes |
+| `getLatest`, `getBetween` | No — `computeChecksum` must also be on |
+
+In all cases, enabling `computeChecksum` alongside `restart` is recommended for data integrity.
 
 ### 5.5 Utility Commands
 

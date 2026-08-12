@@ -427,7 +427,7 @@ fei5subscribe [servergroup:]filetype
 | Keyword | Description |
 |---|---|
 | `output <path>` | Local directory for received files |
-| `restart` | Persist last-query timestamp and enable byte-offset transfer resume |
+| `restart` | Persist last-query timestamp to `<outputDir>/.shadow/.<group>.<type>.restart` and enable byte-offset transfer resume on interrupted downloads |
 | `pull` / `push` | Delivery mode |
 | `using <file>` | Load options from a file |
 
