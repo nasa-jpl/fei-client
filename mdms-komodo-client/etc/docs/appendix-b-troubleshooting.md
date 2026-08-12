@@ -84,7 +84,7 @@
 1. Check network connectivity to the server.
 2. Restart the subscription. Consider using `fei5guardian` on Unix/Linux/macOS, which automatically restarts the subscription on failure:
    ```bash
-   fei5guardian -o /output/dir <domain>:<filetype>
+   fei5guardian servergroup:filetype output /output/dir
    ```
 3. Check server-side logs with your FEI administrator.
 
@@ -100,7 +100,7 @@
 2. Verify the source file is not being modified while being transferred.
 3. Use `fei5crc` to check the stored CRC on the server:
    ```bash
-   fei5crc <domain>:<filetype> <filename>
+   fei5crc servergroup:filetype filename
    ```
 
 ---
@@ -119,6 +119,54 @@ fei5get mymission:science_data
 ```
 
 Adjust the `-Xmx` value as needed for your workload.
+
+---
+
+### Enabling Verbose Logging
+
+**Symptom:** An error occurs but the message is vague and does not point to a clear cause.
+
+**Resolution:**
+
+Increase the log level in `$FEI5/config/mdms.lcf` (command-line tools) or `$FEI5/config/mdmsgui.lcf` (Savannah GUI). Both files use Log4j 2 XML format. Change the `level` attribute on the `<Root>` element:
+
+```xml
+<!-- Default — informational messages only -->
+<Root level="INFO" additivity="true">
+
+<!-- More detail — include debug messages -->
+<Root level="DEBUG" additivity="true">
+
+<!-- Maximum detail — include trace-level messages with file and line numbers -->
+<Root level="TRACE" additivity="true">
+```
+
+At `DEBUG` and `TRACE` levels the `TRACER` appender in `mdms.lcf` activates, which prints log output in the format:
+
+```
+TRACE [thread-name] (SourceFile.java:123) - message
+```
+
+This includes the source file name and line number for every log statement, which is useful for pinpointing where a failure occurs.
+
+Remember to restore the level to `INFO` after diagnosing the issue, as `TRACE` output is very verbose.
+
+---
+
+### SSL Certificate Out of Date
+
+**Symptom:** `SSLHandshakeException`, `PKIX path building failed`, `unable to find valid certification path`, or `Certificate expired` — even after confirming the keystore file is present.
+
+**Resolution:**
+
+The server's public certificate (`public.der`) may have been renewed since your installation. The client's keystore (`mdms-fei.keystore`) must contain the current server certificate to establish a trust chain.
+
+1. Check the expiry date of the certificate currently in the keystore:
+   ```bash
+   keytool -list -v -keystore $FEI5/config/mdms-fei.keystore | grep -A2 "Valid from"
+   ```
+2. If the certificate has expired or the dates do not match the server's current certificate, obtain an updated `public.der` and `mdms-fei.keystore` from your FEI server administrator.
+3. When opening a GitHub issue for SSL problems, include the output of the above `keytool` command so the administrator can confirm whether the certificate on file matches what the server is currently presenting.
 
 ---
 
