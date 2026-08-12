@@ -651,41 +651,191 @@ See `mdms-komodo-client-handler-examples/` in the source repository for example 
 
 These commands require administrative privileges on the FEI server.
 
-### File Type Management
+### 7.1 Non-Interactive Admin Wrappers
 
 ```bash
-# Register a new file type (admin)
+# Register a new file type
 fei5register [servergroup:]filetype [help]
 
-# Unregister a file type (admin)
+# Unregister a file type
 fei5unregister [servergroup:]filetype [help]
 
-# Lock a file type — disables add and delete (admin)
+# Lock a file type — disables add and delete
 fei5locktype [servergroup:]filetype [help]
 
-# Unlock a file type (admin)
+# Unlock a file type
 fei5unlocktype [servergroup:]filetype [help]
-```
 
-### User Management
-
-```bash
-# Accept a pending user registration (admin)
+# Accept a pending user operation request
 fei5accept [servergroup:]filetype for <add|replace|get|delete>
            [output <path>] [crc] [saferead] [autodelete]
            [replace|version] [diff] [help]
-
-# General administration
-fei5admin [help]
 ```
 
-### Reference
-
-Display a quick reference card listing all commands:
+Display a quick reference card:
 
 ```
 fei5reference
 ```
+
+### 7.2 Interactive Admin Session (fei5admin)
+
+`fei5admin` works like `fei5` (see [§5](#5-interactive-session-mode-fei5)) but launches a separate interactive session with a full set of server administration sub-commands. It uses the same `CLProcessor` infrastructure: interactive prompt, `login`, `set`, `help`, `batch`, `history`, etc. are all available.
+
+```
+$ fei5admin
+TESTGRP:>>
+```
+
+The session requires admin credentials. Log in the same way as in the regular interactive session:
+
+```
+TESTGRP:>> login
+Server group>> TESTGRP
+User name>> adminuser
+Password>>
+```
+
+Connect to a specific server within the group, or switch between servers:
+
+```
+TESTGRP:>> connect <server>      Open an admin connection to a server
+TESTGRP:>> focus <server>        Switch active connection to an already-connected server
+TESTGRP:>> showServers           List all servers in the domain
+TESTGRP:>> showConnections       Show all active admin connections
+TESTGRP:>> connections           Show connection count on the current server
+```
+
+#### User management
+
+```
+addUser <name> <password> [<privilege>] ["p"]
+```
+
+Interactive prompts ask for username, password (entered twice), a privilege level, and whether to grant VFT privilege. The loop continues asking "Add another user?" until you answer `N`.
+
+**User privilege levels** (set at `addUser` time, modified later with `modifyUserAccess`):
+
+| Value | Meaning |
+|---|---|
+| `a` | Admin — full server administration access |
+| `r` | Read — `get`, `show`, subscribe operations only |
+| `w` | Write — read plus `add`, `replace`, `delete`, `rename` |
+| `p` | VFT — Virtual File Type access (granted as an add-on to the above) |
+
+```
+delUser <name>
+showUsers [<name>]
+addUserToRole <name> <role>
+delUserFromRole <name> <role>
+showRolesForUser <user>
+modifyUserAccess <user> <access level> {on|off}
+```
+
+`modifyUserAccess` access levels: `admin`, `read`, `write`, `vft`.
+
+#### Role management
+
+Roles are user-defined names — there are no predefined system roles. A role bundles a set of capabilities and is then assigned to file types (`addFileTypeToRole`) and users (`addUserToRole`). A user's effective permissions on a file type are the intersection of their privilege level and the capabilities of any role they hold for that file type.
+
+```
+addRole <role> <capabilities list> [<external role>]
+delRole <role>
+modifyRole <role> <operation> <capabilities list>
+showRoles [<role>]
+showUsersForRole [<role>]
+```
+
+`modifyRole` operation must be one of: `add` (add capabilities to role), `delete` (remove capabilities from role), `set` (replace all capabilities).
+
+The optional `<external role>` argument on `addRole` maps the FEI role to an external identity provider group (e.g. an LDAP group name).
+
+**Allowed capabilities** (comma-separated, case-insensitive):
+
+| Capability | Description | Note |
+|---|---|---|
+| `get` | Download files | |
+| `add` | Upload files | Also grants `get` implicitly |
+| `replace` | Replace existing files | Also grants `add` and `get` implicitly |
+| `delete` | Delete files | |
+| `rename` | Rename files | |
+| `archive` | Archive files | |
+| `locktype` | Lock/unlock file types | |
+| `offline` | Offline access | |
+| `push-subscribe` | Push-mode subscriptions | |
+| `vft` | Virtual File Type operations | |
+| `qaaccess` | QA access | |
+| `receipt` | Request delivery receipts | |
+| `register` | Register/unregister file types | |
+| `replicate` | Replicate server-side directory structure | |
+| `subtype` | Subtype operations | |
+
+Example — create a read-only role, then assign it to a file type and a user:
+
+```
+TESTGRP:>> addRole readonly get,receipt
+TESTGRP:>> addFileTypeToRole science_data readonly
+TESTGRP:>> addUserToRole jsmith readonly
+```
+
+#### File type management
+
+```
+addFileType <name> <directory> "<comment>" <spaceReserved> <threshold>
+            <qaInterval> <checksum> <logDeleteRecord> <receipt> <xmlSchema>
+addFileTypeToRole <filetype> <role>
+delFileType <filetype>
+delFileTypeFromRole <filetype> <role>
+showFileTypes [<filetype expression>]
+showFiletypesForRole <role> [<filetype expression>]
+showRolesForFileType <filetype expression> [<role>]
+modifyFileType <filetype> <field> <value>
+```
+
+`modifyFileType` fields and values:
+
+| Field | Values |
+|---|---|
+| `checksum` | `on` / `off` |
+| `location` | filesystem path |
+| `logdeleterecord` | `on` / `off` |
+| `receipt` | `on` / `off` |
+| `spacereserved` | size in MB |
+| `threshold` | size in MB |
+
+#### File and lock management
+
+```
+move <source filetype> <dest filetype> <file expression>
+showLocks <filetype expression> <file name expression> [<lock value>]
+setLock <filetype> <filename> <lock value>
+```
+
+Lock values: `none`, `get`, `replace`, `delete`, `reserved`, `link`, `rename`, `logdelete`, `move`, `movepersist`.
+
+#### Server operations
+
+```
+hotboot                           Reload server configuration (equivalent to SIGHUP)
+shutdown <timeout>                Shut down the server (timeout: 0–300 seconds)
+fSync [<filetype>] [<datetime>]   Sync database → filesystem
+dSync [<filetype>] [<datetime>]   Sync filesystem → database
+showMemory                        Show server JVM memory usage
+showServerParameters [<server>]   Show server configuration parameters
+logMessage "<message>"            Write a message to the server log
+```
+
+Datetime format for `fSync`/`dSync`: `yyyy-MM-ddThh:mm:ss.SSS`
+
+#### Batch mode
+
+Pass a script with `-b` to run commands non-interactively:
+
+```bash
+fei5admin -b /path/to/admin-script.txt
+```
+
+All `CLProcessor` utility commands (`set`, `help`, `history`, `logFile`, `batch`, etc.) are available. See [§5.6](#56-batch-mode) for batch syntax details.
 
 ---
 

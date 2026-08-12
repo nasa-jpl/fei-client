@@ -417,11 +417,22 @@ fei5accept [servergroup:]filetype for <add|replace|get|delete>
 
 ### fei5admin
 
-General administration interface.
+Interactive administration session. Launches a command loop (same infrastructure as `fei5`) with sub-commands for managing users, roles, file types, locks, and server operations. Requires admin credentials.
 
 ```
-fei5admin [help]
+fei5admin [-b <batch file>]
 ```
+
+See [User's Guide §7.2](users-guide.md#72-interactive-admin-session-fei5admin) for the full sub-command listing. Key sub-commands:
+
+| Category | Sub-commands |
+|---|---|
+| Users | `addUser`, `delUser`, `showUsers`, `addUserToRole`, `delUserFromRole`, `showRolesForUser`, `modifyUserAccess` |
+| Roles | `addRole`, `delRole`, `modifyRole`, `showRoles`, `showUsersForRole` |
+| File types | `addFileType`, `delFileType`, `modifyFileType`, `showFileTypes`, `addFileTypeToRole`, `delFileTypeFromRole`, `showFiletypesForRole`, `showRolesForFileType` |
+| Locks | `showLocks`, `setLock` |
+| Server | `connect`, `focus`, `hotboot`, `shutdown`, `fSync`, `dSync`, `showServers`, `showConnections`, `connections`, `showMemory`, `showServerParameters`, `logMessage` |
+| Files | `move` |
 
 ---
 
