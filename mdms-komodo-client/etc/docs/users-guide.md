@@ -550,7 +550,101 @@ version  (alias: v)               Print the FEI client version
 changePassword                    Change your password interactively
 ```
 
-### 5.6 Batch Mode
+### 5.6 Virtual File Types (VFT)
+
+> **Deprecation notice:** The VFT subsystem is a legacy feature. It is still fully implemented in the current client and server, but it is expected to be removed in a future release. Do not design new workflows around VFTs; use standard file type operations instead.
+
+A **Virtual File Type (VFT)** is a named, server-side manifest that groups *references* — logical pointers, each with a name, into actual files stored in ordinary FEI file types. A VFT does not store file content itself; it stores a versioned directory of (reference-name → filetype/filename) mappings. On each `updateVFT` call the manifest is committed as a new snapshot, making older snapshots retrievable by date.
+
+VFT commands do **not** require a file type to be selected with `use` first — each command takes the VFT name as an explicit argument. A session-level VFT connection is opened automatically on the first VFT command and reused for the rest of the session.
+
+VFT operations require the `vft` (`p`) privilege on your account. To check your privileges:
+
+```
+TESTGRP:>> showCapabilities mymission
+```
+
+#### Creating and managing VFTs
+
+```
+addVFT <vft> ["<comment>"]
+delVFT <vft>
+```
+
+- `addVFT` creates a new VFT on the current server group. A quoted comment is optional.
+- `delVFT` permanently removes the VFT and all its reference history.
+
+#### Managing references
+
+A *reference* is a named slot inside a VFT. After creation, a reference is pointed at a real file via `setReference`. Changes are staged locally and committed atomically by `updateVFT`.
+
+```
+addReference <vft> <ref> [<link>] ["<comment>"]
+setReference <vft> <ref> [<fileType> <fileName>]
+updateVFT    <vft> ["<comment>"]
+cancelReference <vft> <ref>
+delReference    <vft> <ref>
+```
+
+| Command | Description |
+|---|---|
+| `addReference` | Create a named reference slot. `link` is an optional filesystem path for a server-side symlink. |
+| `setReference` | Stage this reference to point to `fileName` in `fileType`. Omitting `fileType`/`fileName` queues a clear. |
+| `updateVFT` | Commit all pending `setReference` changes as a new VFT snapshot. |
+| `cancelReference` | Undo a staged `setReference` before it has been committed. |
+| `delReference` | Permanently remove a reference slot and all its history. |
+
+Typical workflow:
+
+```
+TESTGRP:>> addVFT daily_products "Daily science product set"
+TESTGRP:>> addReference daily_products calibrated_data /vft/links/cal
+TESTGRP:>> setReference daily_products calibrated_data science_data cal_2024_06_15.fits
+TESTGRP:>> updateVFT daily_products "Initial population"
+```
+
+#### Adding a file and reference in one step
+
+`addAndRef` (a file type command, not a VFT command) adds a file to the currently selected file type and simultaneously creates a VFT reference pointing to it:
+
+```
+use mymission:science_data
+addAndRef <file expression> <vft> <link directory>
+```
+
+#### Retrieving VFT contents
+
+```
+getVFT       <vft> [<yyyy-MM-ddThh:mm:ss.SSS>]
+getReference <vft> <ref> [<yyyy-MM-ddThh:mm:ss.SSS>]
+```
+
+- `getVFT` downloads all files referenced by the VFT (at the optional historical snapshot date). It also writes a `<vft>.vft` manifest file to the current directory listing each reference and its target.
+- `getReference` downloads the single file that a named reference points to.
+
+Providing a date retrieves the VFT snapshot as it existed at that point in time.
+
+#### Inspecting VFTs
+
+```
+showVFT [<vft>] [<yyyy-MM-ddThh:mm:ss.SSS>]
+```
+
+- No arguments: list all VFTs on the current server group.
+- With `<vft>`: list that VFT's references (what each reference currently points to, plus any pending staged changes).
+- With a date: show the VFT snapshot as it existed at that time.
+
+#### VFT reader access (filesystem)
+
+VFT readers are OS-level users permitted to access the server-side filesystem symlinks that a VFT creates. These are not FEI user accounts.
+
+```
+addVFTReader   <vft> <osUser>
+delVFTReader   <vft> <osUser>
+showVFTReaders <vft> [<osUser>]
+```
+
+### 5.7 Batch Mode
 
 Batch mode lets you run a script of `fei5` commands from a file instead of typing them interactively.
 
@@ -671,7 +765,7 @@ Both approaches can be used to retrieve newly arrived files, but they work diffe
 
 For most continuous-delivery use cases `fei5subscribe` (or `fei5guardian`) is simpler. Scheduled batch with `getAfter` is useful when you need to integrate file retrieval into a larger scripted workflow or when a fixed polling interval is preferable to a persistent connection.
 
-### 5.7 Getting Help
+### 5.8 Getting Help
 
 ```
 help                              List all commands by category
@@ -682,7 +776,7 @@ help types                        List available category names
 
 Aliases: `?` and `h`.
 
-### 5.8 Exiting
+### 5.9 Exiting
 
 ```
 exit    (aliases: quit, bye, lo)
@@ -961,7 +1055,7 @@ Pass a script with `-b` to run commands non-interactively:
 fei5admin -b /path/to/admin-script.txt
 ```
 
-All `CLProcessor` utility commands (`set`, `help`, `history`, `logFile`, `batch`, etc.) are available. See [§5.6](#56-batch-mode) for batch syntax details.
+All `CLProcessor` utility commands (`set`, `help`, `history`, `logFile`, `batch`, etc.) are available. See [§5.7](#57-batch-mode) for batch syntax details.
 
 ---
 

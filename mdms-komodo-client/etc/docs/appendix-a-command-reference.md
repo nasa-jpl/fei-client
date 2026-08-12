@@ -257,6 +257,159 @@ fei5display [servergroup:]filetype <filename> [help]
 
 ---
 
+## Virtual File Type (VFT) Commands
+
+> **Deprecation notice:** The VFT subsystem is a legacy feature still present in the current client and server. It is expected to be removed in a future release.
+
+VFT commands are only available in the **interactive `fei5` session** (`fei5` / `fei5 -b`). There are no standalone `fei5*` scripts for VFT operations. See [User's Guide §5.6](users-guide.md#56-virtual-file-types-vft) for a conceptual overview.
+
+All VFT commands take the VFT name as an explicit argument — no `use` pre-selection is required.
+
+---
+
+### addVFT
+
+Create a new Virtual File Type.
+
+```
+addVFT <vft> ["<comment>"]
+```
+
+---
+
+### delVFT
+
+Permanently delete a VFT and all its reference history.
+
+```
+delVFT <vft>
+```
+
+---
+
+### addReference
+
+Add a named reference slot to a VFT. `link` is an optional server-side filesystem symlink path.
+
+```
+addReference <vft> <ref>
+addReference <vft> <ref> "<comment>"
+addReference <vft> <ref> <link>
+addReference <vft> <ref> <link> "<comment>"
+```
+
+---
+
+### setReference
+
+Stage a reference to point to a specific file. Changes are not committed until `updateVFT` is run. Omitting `fileType` and `fileName` queues a clear of the reference.
+
+```
+setReference <vft> <ref>
+setReference <vft> <ref> <fileType> <fileName>
+```
+
+---
+
+### updateVFT
+
+Commit all pending `setReference` changes as a new VFT snapshot.
+
+```
+updateVFT <vft>
+updateVFT <vft> "<comment>"
+```
+
+---
+
+### cancelReference
+
+Undo a staged `setReference` before it has been committed by `updateVFT`.
+
+```
+cancelReference <vft> <ref>
+```
+
+---
+
+### delReference
+
+Permanently remove a reference slot and all its history from a VFT.
+
+```
+delReference <vft> <ref>
+```
+
+---
+
+### getVFT
+
+Download all files referenced by a VFT. Writes a `<vft>.vft` manifest file to the current directory. Supplying a date retrieves the historical snapshot.
+
+```
+getVFT <vft>
+getVFT <vft> <yyyy-MM-ddThh:mm:ss.SSS>
+```
+
+---
+
+### getReference
+
+Download the single file that a named reference points to.
+
+```
+getReference <vft> <ref>
+getReference <vft> <ref> <yyyy-MM-ddThh:mm:ss.SSS>
+```
+
+---
+
+### showVFT
+
+List VFTs and their references.
+
+```
+showVFT
+showVFT <vft>
+showVFT <yyyy-MM-ddThh:mm:ss.SSS>
+showVFT <vft> <yyyy-MM-ddThh:mm:ss.SSS>
+```
+
+No arguments lists all VFTs on the current server group. With a VFT name, shows that VFT's references and any pending staged changes. With a date, shows the historical snapshot.
+
+---
+
+### addVFTReader
+
+Grant an OS-level filesystem user read access to a VFT's server-side symlinks.
+
+```
+addVFTReader <vft> <osUser>
+```
+
+---
+
+### delVFTReader
+
+Revoke a filesystem user's read access to a VFT.
+
+```
+delVFTReader <vft> <osUser>
+```
+
+---
+
+### showVFTReaders
+
+List filesystem users permitted to read a VFT's server-side symlinks.
+
+```
+showVFTReaders <vft>
+showVFTReaders <vft> <osUser>
+```
+
+---
+
 ## Subscription Commands
 
 ### fei5subscribe
