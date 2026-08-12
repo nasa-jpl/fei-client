@@ -16,9 +16,10 @@
 2. [Getting Started](#2-getting-started)
 3. [Authentication](#3-authentication)
 4. [File Operations](#4-file-operations)
-5. [Subscription and Notification](#5-subscription-and-notification)
-6. [Administration Commands](#6-administration-commands)
-7. [Graphical User Interface (Savannah)](#7-graphical-user-interface-savannah)
+5. [Interactive Session Mode (fei5)](#5-interactive-session-mode-fei5)
+6. [Subscription and Notification](#6-subscription-and-notification)
+7. [Administration Commands](#7-administration-commands)
+8. [Graphical User Interface (Savannah)](#8-graphical-user-interface-savannah)
 
 ---
 
@@ -347,7 +348,225 @@ fei5filetypes srvgroups
 
 ---
 
-## 5. Subscription and Notification
+## 5. Interactive Session Mode (fei5)
+
+Running `fei5` with no arguments launches an interactive session. This is an alternative to the individual wrapper commands (`fei5add`, `fei5get`, etc.) — both reach the same server operations, but the interactive mode lets you stay connected across multiple commands, reuse an open file type connection, and use a shorter command syntax.
+
+```
+$ fei5
+TESTGRP:>>
+```
+
+The prompt shows the current server group and, once a file type is selected with `use`, the active file type:
+
+```
+TESTGRP:>> use science_data
+Using file type TESTGRP:science_data
+TESTGRP:science_data>>
+```
+
+### 5.1 Launching and Logging In
+
+```
+fei5
+```
+
+On startup the session attempts to read credentials from `~/.komodo/login` (the same cache written by `fei5kinit`). If no cached credentials exist you are prompted:
+
+```
+TESTGRP:>> login
+Server group>> TESTGRP
+User name>> jsmith
+Password>>
+```
+
+You can also pass the server group on the command line to skip that prompt:
+
+```
+TESTGRP:>> login jsmith mypassword TESTGRP
+```
+
+(In batch files: `login <username> [<password>] [<servergroup>]`)
+
+Typing `abort` at any prompt during login returns to the session without logging in. Typing `exit`, `quit`, or `bye` at any prompt terminates the client.
+
+### 5.2 Selecting a File Type
+
+Before running file operations you must connect to a file type with `use`:
+
+```
+use [<servergroup>:]<filetype>
+```
+
+```
+TESTGRP:>> use science_data
+Using file type TESTGRP:science_data
+TESTGRP:science_data>>
+```
+
+To switch to a file type on a different server group:
+
+```
+TESTGRP:science_data>> use OTHERGRP:telemetry
+Using file type OTHERGRP:telemetry
+OTHERGRP:telemetry>>
+```
+
+Previously opened connections are cached for the session; switching back to one does not re-open it.
+
+### 5.3 File Operations
+
+All commands operate on the file type selected with `use`. Short aliases are shown in parentheses.
+
+**Listing files**
+
+```
+show <file expression>            (alias: s)
+showLatest [<file expression>]
+showAfter <yyyy-MM-ddThh:mm:ss.SSS>
+showBetween <datetime1> and <datetime2>
+```
+
+```
+TESTGRP:science_data>> show *.fits
+TESTGRP:science_data>> showAfter 2024-01-01T00:00:00.000
+```
+
+**Downloading files**
+
+```
+get <file expression>             (alias: g)
+getLatest [<file expression>]
+getAfter <yyyy-MM-ddThh:mm:ss.SSS>
+getBetween <datetime1> and <datetime2>
+```
+
+```
+TESTGRP:science_data>> get *.fits
+TESTGRP:science_data>> getLatest
+```
+
+Append `invoke "<shell command>"` to any `get`/`show` variant to run a command on each received file:
+
+```
+TESTGRP:science_data>> get *.fits invoke "process.sh"
+```
+
+**Uploading files**
+
+```
+add <file expression> ["comment"]    (alias: a)
+replace <file expression> ["comment"] (alias: r)
+```
+
+```
+TESTGRP:science_data>> add data001.fits
+TESTGRP:science_data>> add *.fits "daily downlink"
+TESTGRP:science_data>> replace data001.fits "v2 correction"
+```
+
+**Other file operations**
+
+```
+delete <file expression>          (alias: d)
+rename <old name> <new name>      (alias: n)
+comment <filename> "<comment>"    (alias: c)
+checksum <local filename>
+archive <filename>
+```
+
+### 5.4 Session Settings
+
+Use `set` to toggle behavioural options that apply to all subsequent commands in the session. Run `set` with no arguments to see all current values.
+
+```
+set <parameter> {on|off}
+```
+
+| Parameter | Default | Effect |
+|---|---|---|
+| `replaceFile` | off | Overwrite local file on `get` if it already exists |
+| `versionFile` | off | Download into a versioned filename |
+| `computeChecksum` | off | Verify CRC on every transfer |
+| `autoDelete` | off | Delete local file after successful `add` |
+| `safeRead` | off | Lock file on server during `get` |
+| `receipt` | off | Request delivery receipt from server |
+| `diff` | off | Only transfer files that differ from local copies |
+| `replicate` | off | Preserve server-side directory structure on `get` |
+| `restart` | off | Resume subscriptions from last known position |
+| `verbose` | off | Print per-file transfer details |
+| `veryVerbose` | off | Print extended transfer details |
+| `abort` | off | Abort batch file on first error |
+| `echo` | on | Echo commands in batch mode |
+| `log` | on | Write session activity to the log |
+| `preserve` | on | Preserve local file timestamps |
+| `test` | off | Dry-run mode — parse commands but do not execute |
+| `timer` | off | Print elapsed time after each command |
+
+### 5.5 Utility Commands
+
+```
+showTypes                         List all file types on the current server group
+setDefaultGroup <group>           Switch server group without changing file type
+  (alias: defaultGroup)
+showDomainFile                    Print the contents of domain.fei
+dateFormat ["<format>"]           Set or show the date format used in output
+logFile <filename>                Write session transcript to a file
+  (alias: log)
+logCmds <filename>                Write commands (not output) to a file
+history <number>                  Repeat the last N commands
+cd [<directory>]                  Change local working directory
+ls                                List local directory contents
+pwd                               Print local working directory
+version  (alias: v)               Print the FEI client version
+changePassword                    Change your password interactively
+```
+
+### 5.6 Batch Mode
+
+Pass a script file to `fei5` with the `-b` flag to run commands non-interactively:
+
+```bash
+fei5 -b /path/to/script.fei5
+```
+
+Lines beginning with `#` are treated as comments. The `batch` command can also be issued from within an interactive session:
+
+```
+TESTGRP:>> batch /path/to/script.fei5
+```
+
+Repeat scheduling is supported:
+
+```
+batch <filename> repeatAt <hh:mm> {am|pm}
+batch <filename> repeatEvery <hh:mm> [<hh:mm> {am|pm}]
+```
+
+Set `abort on` in a batch script to stop execution on the first error.
+
+### 5.7 Getting Help
+
+```
+help                              List all commands by category
+help <command>                    Show usage for a specific command
+help <type>                       List commands in a category (filetype, vft, utility, settings)
+help types                        List available category names
+```
+
+Aliases: `?` and `h`.
+
+### 5.8 Exiting
+
+```
+exit    (aliases: quit, bye, lo)
+```
+
+Closes all open file type connections, terminates the session, and exits.
+
+---
+
+## 6. Subscription and Notification
 
 FEI supports event-driven file delivery. When subscribed to a file type, the client continuously polls the server and automatically downloads files as they are added.
 
@@ -428,7 +647,7 @@ See `mdms-komodo-client-handler-examples/` in the source repository for example 
 
 ---
 
-## 6. Administration Commands
+## 7. Administration Commands
 
 These commands require administrative privileges on the FEI server.
 
@@ -470,7 +689,7 @@ fei5reference
 
 ---
 
-## 7. Graphical User Interface (Savannah)
+## 8. Graphical User Interface (Savannah)
 
 FEI includes a Swing-based GUI called **Savannah**.
 
