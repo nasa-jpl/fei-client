@@ -524,26 +524,124 @@ changePassword                    Change your password interactively
 
 ### 5.6 Batch Mode
 
-Pass a script file to `fei5` with the `-b` flag to run commands non-interactively:
+Batch mode lets you run a script of `fei5` commands from a file instead of typing them interactively.
+
+#### Running a batch file from the command line
 
 ```bash
 fei5 -b /path/to/script.fei5
 ```
 
-Lines beginning with `#` are treated as comments. The `batch` command can also be issued from within an interactive session:
+The `-b` flag:
+- Suppresses all TTY output (runs silently)
+- Exits automatically when the script is exhausted (unless a repeat schedule is set — see below)
+
+#### Running a batch file from within an interactive session
+
+The `batch` command runs a file and then returns control to the interactive prompt:
 
 ```
-TESTGRP:>> batch /path/to/script.fei5
+TESTGRP:science_data>> batch /path/to/script.fei5
 ```
 
-Repeat scheduling is supported:
+If no path separator is present in the filename, the file is looked up in the current working directory.
+
+#### Batch file syntax
+
+Lines beginning with `#` are treated as comments and are ignored.
+
+Example batch file:
+
+```
+# Retrieve new science files every night
+login jsmith mymission
+use mymission:science_data
+set output /data/science
+set replace on
+set abort on
+get *
+```
+
+The `login` command in a batch file accepts an optional password argument:
+
+```
+login <username> [<password>] [<servergroup>]
+```
+
+Omitting the password in a batch file causes the password to be read from the credential cache written by `fei5kinit`. Including it in plain text is not recommended for production scripts; use `fei5kinit` to pre-cache credentials instead.
+
+#### Dry-run / test mode
+
+Before running a batch script against the server, use `set test on` to validate syntax without making any server calls:
+
+```
+set test on
+batch /path/to/script.fei5
+```
+
+With `test on`:
+- All argument parsing and date parsing are performed (syntax errors are reported).
+- No actual file transfers or server operations are issued.
+- At end of file the session prints: `Batch file test completed.`
+
+Reset with `set test off` before running for real.
+
+#### Repeat scheduling
+
+Use `repeatAt` to run a batch file once per day at a fixed wall-clock time:
 
 ```
 batch <filename> repeatAt <hh:mm> {am|pm}
-batch <filename> repeatEvery <hh:mm> [<hh:mm> {am|pm}]
 ```
 
-Set `abort on` in a batch script to stop execution on the first error.
+Example — run at 2:30 AM every day:
+
+```
+TESTGRP:>> batch /path/to/nightly.fei5 repeatAt 02:30 am
+```
+
+Use `repeatEvery` to run a batch file at a fixed interval:
+
+```
+batch <filename> repeatEvery <hh:mm> [<starttime> {am|pm}]
+```
+
+- `hh:mm` is the interval (hours:minutes). For example `00:30` means every 30 minutes.
+- The optional start time is a wall-clock time for the first execution. If omitted, the first run begins immediately.
+
+Example — run every 30 minutes starting at 6:00 AM:
+
+```
+TESTGRP:>> batch /path/to/poll.fei5 repeatEvery 00:30 06:00 am
+```
+
+When a repeat schedule is active:
+- The interactive prompt exits (`_done = true`) so no further commands can be entered.
+- The client stays alive between runs; `fei5 -b`'s auto-exit is suppressed.
+- Each scheduled run re-opens the batch file from the beginning.
+
+To stop a running scheduled batch, send an interrupt signal (`Ctrl-C`) or kill the process.
+
+#### Error handling in batch files
+
+| Setting | Effect |
+|---|---|
+| `set abort on` | Stop executing the batch file on the first error |
+| `set abort off` | Continue executing after errors (default) |
+| `set echo on` | Echo each command before executing it (default: on) |
+
+#### Batch-based polling vs. fei5subscribe
+
+Both approaches can be used to retrieve newly arrived files, but they work differently:
+
+| | `fei5subscribe` | Scheduled batch with `getAfter` |
+|---|---|---|
+| Delivery model | Push or pull, event-driven | Pull, timer-driven |
+| Reconnects automatically | Yes (with `fei5guardian`) | Yes, on each scheduled run |
+| Gap recovery | `restart` keyword | `restart` + date tracking in script |
+| Typical use | Continuous, low-latency delivery | Periodic bulk pulls; scripted pipelines |
+
+For most continuous-delivery use cases `fei5subscribe` (or `fei5guardian`) is simpler. Scheduled batch with `getAfter` is useful when you need to integrate file retrieval into a larger scripted workflow or when a fixed polling interval is preferable to a persistent connection.
 
 ### 5.7 Getting Help
 
