@@ -137,7 +137,20 @@ source fei5/use_FEI5.csh
 
 You may add this line to your shell profile (e.g., `~/.bashrc`, `~/.bash_profile`, `~/.cshrc`) to make it persistent.
 
-The `use_FEI5.sh` script sets the `FEI5` environment variable to the `fei5/` directory and adds `fei5/bin` to your `PATH`.
+The script sets two variables:
+- `FEI5` — points to `fei5/config/` (where `domain.fei` and the keystore live)
+- `PATH` — prepends `fei5/bin/` so the `fei5*` commands are found
+
+The `CLASSPATH` is built automatically by the launcher scripts from the JARs in `fei5/lib/`. You do not need to set it manually.
+
+**Java:** The launchers use `java` from your `PATH` by default. If you have multiple JDKs installed and need to select a specific one, set `JAVA_HOME` before sourcing the script:
+
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk   # example path
+source fei5/use_FEI5.sh
+```
+
+When `JAVA_HOME` is set the launchers use `$JAVA_HOME/bin/java` instead of whatever `java` is on the `PATH`.
 
 ### Step 3: Configure Domain and SSL
 
@@ -160,15 +173,28 @@ Use Windows Explorer or a ZIP utility to extract `mdms-komodo-client-<version>-f
 
 ### Step 2: Set Environment Variables
 
-Run the provided setup script:
+Run the provided setup script from a Command Prompt opened in the directory where you extracted the archive:
 
 ```cmd
 fei5\use_FEI5.bat
 ```
 
-You may add `fei5\bin` to your system `PATH` via **System Properties → Environment Variables**.
+This sets `FEI5` to `fei5\config\` and prepends `fei5\bin\` to `PATH` for the current session. The `CLASSPATH` is built automatically by the launcher scripts from the JARs in `fei5\lib\` — you do not need to set it.
 
-Set the `FEI5` environment variable to the full path of the `fei5\` directory.
+To make these variables persistent across sessions, set them via **System Properties → Environment Variables**:
+
+| Variable | Value |
+|---|---|
+| `FEI5` | Full path to `fei5\config\` (e.g., `C:\fei5\config`) |
+| `PATH` | Append `C:\fei5\bin` to the existing value |
+
+**Java:** The launchers use `java` from your `PATH` by default. If you have multiple JDKs installed, set `JAVA_HOME` to select a specific one:
+
+| Variable | Value |
+|---|---|
+| `JAVA_HOME` | Path to the JDK root (e.g., `C:\Program Files\Eclipse Adoptium\jdk-17`) |
+
+When `JAVA_HOME` is set the launchers use `%JAVA_HOME%\bin\java` instead of whatever `java` is on the `PATH`.
 
 ### Step 3: Configure Domain and SSL
 
