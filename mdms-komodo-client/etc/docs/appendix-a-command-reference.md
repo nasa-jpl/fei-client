@@ -427,7 +427,7 @@ fei5subscribe [servergroup:]filetype
 | Keyword | Description |
 |---|---|
 | `output <path>` | Local directory for received files |
-| `restart` | Resume from last known position after reconnect |
+| `restart` | Persist last-query timestamp and enable byte-offset transfer resume |
 | `pull` / `push` | Delivery mode |
 | `using <file>` | Load options from a file |
 
@@ -487,6 +487,23 @@ fei5filetypes srvgroups
 ```
 
 `srvgroups` lists server groups; omitting it lists file types within a server group.
+
+---
+
+### showCapabilities (interactive session only)
+
+Show your access capabilities for file types and VFTs on the current server group. Available in the `fei5` interactive session only — there is no standalone `fei5*` script wrapper.
+
+```
+showCapabilities [<filetype>]
+showCapabilities [<servergroup>:]<filetype>
+```
+
+Alias: `showCaps`
+
+With no argument, lists user-level access and per-filetype capability strings for all file types and VFTs on the current server group. With a file type name, shows capabilities for that type only.
+
+See [User's Guide §5.5](users-guide.md#55-utility-commands) for usage details.
 
 ---
 

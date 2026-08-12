@@ -446,6 +446,19 @@ Previously opened connections are cached for the session; switching back to one 
 
 All commands operate on the file type selected with `use`. Short aliases are shown in parentheses.
 
+**File expressions**
+
+A *file expression* is a `*`-wildcard pattern matched server-side against filenames in the selected file type. `*` matches any sequence of characters. The default when no expression is given is `*` (match all files).
+
+In the interactive session there is no OS shell between you and the client, so `*.fits` is passed as-is — no quoting is needed. In standalone commands (`fei5get`, `fei5list`, etc.) the OS shell expands unquoted globs before Java sees them; **always single-quote the expression** on the command line:
+
+```bash
+fei5get mymission:science_data '*.fits'     # correct
+fei5get mymission:science_data *.fits       # wrong — shell may expand before FEI sees it
+```
+
+For `add` and `replace`, `*` is expanded **client-side** against the current local directory before uploading.
+
 **Listing files**
 
 ```
@@ -459,6 +472,8 @@ showBetween <datetime1> and <datetime2>
 TESTGRP:science_data>> show *.fits
 TESTGRP:science_data>> showAfter 2024-01-01T00:00:00.000
 ```
+
+> `showSince <date>` is a deprecated alias for `showAfter`. It prints a runtime warning and redirects to the same operation.
 
 **Downloading files**
 
@@ -474,11 +489,29 @@ TESTGRP:science_data>> get *.fits
 TESTGRP:science_data>> getLatest
 ```
 
-Append `invoke "<shell command>"` to any `get`/`show` variant to run a command on each received file:
+> `getSince <date>` is a deprecated alias for `getAfter`. It prints a runtime warning and redirects to the same operation.
+
+**Invoking a command on each received file**
+
+Append `invoke "<shell command>"` to any `get`/`show` variant to run a command after each file is received:
 
 ```
-TESTGRP:science_data>> get *.fits invoke "process.sh"
+TESTGRP:science_data>> get *.fits invoke "process.sh $fileName"
 ```
+
+The following substitution variables are expanded inside the invoke string before execution:
+
+| Variable | Expands to |
+|---|---|
+| `$fileName` | Full local path to the downloaded file |
+| `$fileNameNoPath` | Filename only, no directory (e.g. `foo.dat`) |
+| `$filePath` | Directory containing the downloaded file |
+| `$fileType` | FEI file type name |
+| `$serverGroup` | FEI server group name |
+| `$comment` | File comment metadata (or `NULL` if none) |
+| `$remoteLocation` | Server-side file path |
+
+Variable names are case-insensitive. If a value is not available it is substituted with the string `NULL`.
 
 **Uploading files**
 
@@ -501,7 +534,19 @@ rename <old name> <new name>      (alias: n)
 comment <filename> "<comment>"    (alias: c)
 checksum <local filename>
 archive <filename>
+lockFileType [owner|group]
+unlockFileType owner|group        (alias: unlock)
 ```
+
+`lockFileType` and `unlockFileType` control write access to the currently selected file type:
+
+| Mode | Effect |
+|---|---|
+| `owner` | Remove write access from all users |
+| `group` | Remove write access from all users except the owner |
+| (no arg) | Lock with default mode (owner implied) |
+
+`unlockFileType` requires an explicit mode argument. These are user-level convenience commands; the admin-level `fei5locktype`/`fei5unlocktype` CLI wrappers perform the same operation without an active session.
 
 ### 5.4 Session Settings
 
@@ -521,7 +566,7 @@ set <parameter> {on|off}
 | `receipt` | off | Request delivery receipt from server |
 | `diff` | off | Only transfer files that differ from local copies |
 | `replicate` | off | Preserve server-side directory structure on `get` |
-| `restart` | off | Resume subscriptions from last known position |
+| `restart` | off | Enable transfer resume and persist last-query timestamp |
 | `verbose` | off | Print per-file transfer details |
 | `veryVerbose` | off | Print extended transfer details |
 | `abort` | off | Abort batch file on first error |
@@ -531,13 +576,26 @@ set <parameter> {on|off}
 | `test` | off | Dry-run mode — parse commands but do not execute |
 | `timer` | off | Print elapsed time after each command |
 
+**How `restart` works**
+
+When `restart` is on, two things happen:
+
+1. **Last-query timestamp persistence** — after each successful `getAfter` or subscription run the timestamp of the last received file is saved to `~/.komodo/<group>_<filetype>.restart`. On the next run the client automatically resumes from that point, so you only receive files that arrived after the last run.
+
+2. **Partial-transfer resume** — if a file transfer is interrupted mid-download, the client records how many bytes were received. On retry the server resumes sending from that byte offset rather than restarting from the beginning. The resume offset is the size of the already-downloaded partial file on disk.
+
+For `getAfter`, `getLatest`, and the subscription commands, `restart` alone is sufficient. For `getBetween` and `getLatest` variants, `computeChecksum` must also be enabled for byte-offset resume to activate. In all cases, enabling `computeChecksum` alongside `restart` is recommended for data integrity.
+
 ### 5.5 Utility Commands
 
 ```
 showTypes                         List all file types on the current server group
 setDefaultGroup <group>           Switch server group without changing file type
   (alias: defaultGroup)
+showCapabilities [<filetype>]     Show your access capabilities for file types
+  (alias: showCaps)               and VFTs on the current server group
 showDomainFile                    Print the contents of domain.fei
+makeDomainFile <path>             Write a fresh domain.fei for the current server group
 dateFormat ["<format>"]           Set or show the date format used in output
 logFile <filename>                Write session transcript to a file
   (alias: log)
@@ -549,6 +607,10 @@ pwd                               Print local working directory
 version  (alias: v)               Print the FEI client version
 changePassword                    Change your password interactively
 ```
+
+**`showCapabilities`** displays what operations your account is permitted to perform. With no argument it lists capabilities for all file types on the current server group. With a file type name it shows capabilities for that type only. Output includes user-level access (`r`, `w`, `a`, `p`) and per-filetype capability strings for both file type operations and VFT operations.
+
+**`makeDomainFile <path>`** queries the server and writes an updated `domain.fei` to the given path. Useful when your site's server topology has changed and the existing `domain.fei` is stale. A server group must be selected (either via `use` or `setDefaultGroup`) before running this command.
 
 ### 5.6 Virtual File Types (VFT)
 
