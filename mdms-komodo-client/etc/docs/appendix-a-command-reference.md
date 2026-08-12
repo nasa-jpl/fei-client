@@ -25,11 +25,29 @@ The following keywords are accepted by most file operation commands:
 
 > **Note:** `user` and `password` are **not** accepted by file operation commands. Credentials are read automatically from the `~/.komodo/login` cache written by `fei5kinit`. The `user` keyword is accepted only by `fei5kinit` itself.
 
-**Date/time format:**
+**Date/time format — CCSDSA (default):**
 ```
-YYYY-MM-DD HH:MM:SS
+YYYY-MM-DDThh:mm:ss.SSS
 ```
-Example: `2024-06-15 00:00:00`
+Example: `2024-06-15T00:00:00.000`
+
+All time components are optional and default to zero when omitted. The `T` separator is also optional. The following are all valid and equivalent to `2024-06-15T00:00:00.000`:
+
+```
+2024-06-15
+2024-06-15T14
+2024-06-15T14:30
+2024-06-15T14:30:00
+2024-06-15 14:30:00
+```
+
+To use a different format for a single command, supply it with the `format` keyword:
+
+```
+fei5list mymission:science_data after '2024-06-15 00:00:00' format 'yyyy-MM-dd HH:mm:ss'
+```
+
+In an interactive session, change the format for the entire session with the `dateFormat` command.
 
 ---
 
@@ -453,6 +471,30 @@ Password management utility.
 ```
 pwdclient [help]
 ```
+
+---
+
+### fei5encrypt
+
+Generate a SHA-1 hash of a password string. Used during **server bootstrap only** — when an FEI server needs to be seeded with its initial administrator password hash.
+
+```
+fei5encrypt
+```
+
+Takes no arguments. Prompts interactively:
+
+```
+Message >>
+```
+
+The input is not echoed to the terminal. The output is the SHA-1 digest printed as a 40-character hex string, e.g.:
+
+```
+8843d7f92416211de9ebb963ff4ce28125932878
+```
+
+> **Note:** This is a one-way hash. It is not used for client authentication — client login credentials are encrypted with RSA/OAEP and handled automatically by `fei5kinit`. `fei5encrypt` is only needed by an FEI server administrator configuring a new server instance. Normal users do not need this command.
 
 ---
 

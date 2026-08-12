@@ -157,6 +157,34 @@ Prompts for your current password, then for a new password (entered twice). Upda
 
 ## 4. File Operations
 
+### Date/time format
+
+All `before`, `after`, and `between` filters accept dates in **CCSDSA format** (ISO 8601 with milliseconds):
+
+```
+YYYY-MM-DDThh:mm:ss.SSS
+```
+
+All time components are optional and default to zero when absent. The `T` separator is also optional. These are all valid:
+
+| Input | Interpreted as |
+|---|---|
+| `2024-06-15` | `2024-06-15T00:00:00.000` |
+| `2024-06-15T14:30` | `2024-06-15T14:30:00.000` |
+| `2024-06-15T14:30:00` | `2024-06-15T14:30:00.000` |
+| `2024-06-15T14:30:00.123` | `2024-06-15T14:30:00.123` |
+| `2024-06-15 14:30:00` | `2024-06-15T14:30:00.000` (space accepted as T) |
+
+To use a different format (e.g. day-of-year), pass it with the `format` keyword:
+
+```bash
+fei5list mymission:science_data after '2024-075T00:00:00.000' format 'yyyy-DDD'T'HH:mm:ss.SSS'
+```
+
+In an interactive session the format can be set for the entire session with `dateFormat "<pattern>"`.
+
+---
+
 ### 4.1 Adding Files
 
 ```
