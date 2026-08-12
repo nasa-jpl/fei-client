@@ -14,8 +14,6 @@ The following keywords are accepted by most file operation commands:
 
 | Keyword | Description |
 |---|---|
-| `user <name>` | FEI username (overrides stored credentials) |
-| `password <pass>` | FEI password or encrypted token (overrides stored credentials) |
 | `before <datetime>` | Filter: only files added/modified before this date |
 | `after <datetime>` | Filter: only files added/modified after this date |
 | `between <dt1> and <dt2>` | Filter: only files in this date range |
@@ -24,6 +22,8 @@ The following keywords are accepted by most file operation commands:
 | `receipt` | Request a delivery receipt from the server |
 | `filehandler` | Invoke a configured file handler |
 | `help` | Display command usage |
+
+> **Note:** `user` and `password` are **not** accepted by file operation commands. Credentials are read automatically from the `~/.komodo/login` cache written by `fei5kinit`. The `user` keyword is accepted only by `fei5kinit` itself.
 
 **Date/time format:**
 ```

@@ -115,13 +115,18 @@ If your server has multiple server groups, run `fei5kinit` once per server group
 
 ### Step 2 — Run Commands
 
-After `fei5kinit`, all commands look up credentials from `~/.komodo/login` automatically. You can also supply credentials inline on any command as bare `user` and `password` tokens:
+After `fei5kinit`, all commands read credentials from `~/.komodo/login` automatically using the server group name as the key. No credential arguments are needed on the command line:
 
 ```
-fei5list servergroup:filetype user jsmith password mysecretpass
+fei5list servergroup:filetype
+fei5get  servergroup:filetype '*.fits' output /data/output
 ```
 
-Inline credentials take precedence over the stored token. Passing a plaintext password on the command line is not recommended for shared systems.
+If no cached credentials exist for the server group, the command will fail with:
+```
+Please acquire credentials with login utility.
+```
+Run `fei5kinit` first in that case.
 
 ### Listing Stored Credentials
 
