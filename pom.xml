@@ -61,7 +61,7 @@
         <version.jakarta.xml.ws-api>4.0.0</version.jakarta.xml.ws-api>
         <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>
         <version.jaxb-impl>4.0.0</version.jaxb-impl>
-        <version.fei-main>3.6.5</version.fei-main>
+        <version.fei-main>4.0.0</version.fei-main>
         <version.c3p0>0.8.5.2</version.c3p0>
         <version.json-simple>1.1</version.json-simple>
         <version.fscontext>4.2</version.fscontext>
