@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FEI Komodo Client &#8212; Documentation</title>
+<style>
+  :root {
+    --bg:#1e1e2e; --surface:#2a2a3e; --surface2:#313149; --border:#44475a;
+    --accent:#6272a4; --accent-bright:#8be9fd; --text:#f8f8f2; --text-muted:#6272a4;
+    --code-bg:#282a36; --link:#8be9fd; --link-hover:#50fa7b;
+    --sidebar-w:280px; --header-h:50px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--text);display:flex;flex-direction:column;
+    height:100vh;overflow:hidden;}
+  #header{height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);
+    display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;}
+  #header h1{font-size:15px;font-weight:600;flex:1;}
+  #header .badge{font-size:11px;background:var(--accent);color:#fff;
+    padding:2px 8px;border-radius:12px;font-weight:500;}
+  #layout{display:flex;flex:1;overflow:hidden;}
+  #sidebar{width:var(--sidebar-w);background:var(--surface);
+    border-right:1px solid var(--border);display:flex;flex-direction:column;
+    overflow:hidden;flex-shrink:0;}
+  #sidebar-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+  #sidebar-tabs button{flex:1;background:none;border:none;color:var(--text-muted);
+    font-size:12px;font-weight:500;padding:10px 6px;cursor:pointer;
+    border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+  #sidebar-tabs button.active{color:var(--accent-bright);border-bottom-color:var(--accent-bright);}
+  #sidebar-tabs button:hover:not(.active){color:var(--text);}
+  #nav-panel,#toc-panel{overflow-y:auto;flex:1;padding:8px 0;}
+  #toc-panel{display:none;}
+  .doc-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;
+    border-radius:6px;margin:2px 6px;transition:background .12s;
+    border-left:3px solid transparent;}
+  .doc-item:hover{background:var(--surface2);}
+  .doc-item.active{background:var(--surface2);border-left-color:var(--accent-bright);}
+  .doc-item .icon{font-size:16px;flex-shrink:0;}
+  .doc-item .label{font-size:13px;line-height:1.3;}
+  .doc-item .sublabel{font-size:11px;color:var(--text-muted);margin-top:1px;}
+  #toc-panel ul{list-style:none;padding:0;}
+  #toc-panel a{display:block;padding:5px 14px;font-size:12px;color:var(--text-muted);
+    text-decoration:none;border-radius:4px;margin:1px 4px;
+    transition:color .12s,background .12s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  #toc-panel a:hover{color:var(--text);background:var(--surface2);}
+  #toc-panel a.h1{color:var(--text);font-weight:600;font-size:13px;padding-left:10px;}
+  #toc-panel a.h2{padding-left:16px;}
+  #toc-panel a.h3{padding-left:26px;font-size:11px;}
+  #toc-panel a.h4{padding-left:36px;font-size:11px;}
+  #content-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  #content{flex:1;overflow-y:auto;padding:36px 48px;max-width:900px;width:100%;margin:0 auto;}
+  #content h1,#content h2,#content h3,#content h4,#content h5,#content h6{
+    color:var(--text);line-height:1.3;margin-top:1.8em;margin-bottom:.5em;scroll-margin-top:16px;}
+  #content h1{font-size:2em;border-bottom:1px solid var(--border);padding-bottom:.3em;margin-top:0;}
+  #content h2{font-size:1.45em;border-bottom:1px solid var(--border);padding-bottom:.2em;}
+  #content h3{font-size:1.2em;}
+  #content h4{font-size:1em;font-weight:600;}
+  #content p{margin:.7em 0;line-height:1.7;}
+  #content a{color:var(--link);text-decoration:none;}
+  #content a:hover{color:var(--link-hover);text-decoration:underline;}
+  #content code{background:var(--code-bg);color:#ff79c6;padding:.15em .4em;border-radius:4px;
+    font-family:"SF Mono","Fira Code",Consolas,"Liberation Mono",monospace;font-size:.875em;}
+  #content pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;
+    padding:16px 20px;overflow-x:auto;margin:1em 0;font-size:.875em;line-height:1.6;}
+  #content pre code{background:none;color:#f8f8f2;padding:0;font-size:1em;border-radius:0;}
+  #content blockquote{border-left:4px solid var(--accent);margin:1em 0;padding:8px 16px;
+    background:var(--surface);border-radius:0 6px 6px 0;color:#cdd6f4;}
+  #content blockquote p{margin:.3em 0;}
+  #content blockquote strong{color:var(--accent-bright);}
+  #content ul,#content ol{padding-left:1.8em;margin:.6em 0;}
+  #content li{margin:.25em 0;line-height:1.6;}
+  #content table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.9em;}
+  #content th,#content td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top;}
+  #content th{background:var(--surface2);color:var(--accent-bright);font-weight:600;}
+  #content tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+  #content tr:hover td{background:var(--surface2);}
+  #content hr{border:none;border-top:1px solid var(--border);margin:1.8em 0;}
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>FEI Komodo Client &#8212; Documentation</h1>
+  <span class="badge">JPL / MDMS</span>
+</div>
+<div id="layout">
+  <nav id="sidebar">
+    <div id="sidebar-tabs">
+      <button class="active" id="tab-nav" onclick="showTab('nav')">Docs</button>
+      <button id="tab-toc" onclick="showTab('toc')">Contents</button>
+    </div>
+    <div id="nav-panel">
+      <div class="doc-item active" id="nav-0" onclick="loadDoc(0)">
+        <span class="icon">&#128196;</span>
+        <div><div class="label">README</div><div class="sublabel">Overview &amp; index</div></div>
+      </div>
+      <div class="doc-item" id="nav-1" onclick="loadDoc(1)">
+        <span class="icon">&#9881;</span>
+        <div><div class="label">Installation Guide</div><div class="sublabel">Setup &amp; configuration</div></div>
+      </div>
+      <div class="doc-item" id="nav-2" onclick="loadDoc(2)">
+        <span class="icon">&#128218;</span>
+        <div><div class="label">User's Guide</div><div class="sublabel">Commands &amp; operations</div></div>
+      </div>
+      <div class="doc-item" id="nav-3" onclick="loadDoc(3)">
+        <span class="icon">&#128196;</span>
+        <div><div class="label">Appendix A</div><div class="sublabel">Command reference</div></div>
+      </div>
+      <div class="doc-item" id="nav-4" onclick="loadDoc(4)">
+        <span class="icon">&#128295;</span>
+        <div><div class="label">Appendix B</div><div class="sublabel">Troubleshooting</div></div>
+      </div>
+    </div>
+    <div id="toc-panel"><ul id="toc-list"></ul></div>
+  </nav>
+  <div id="content-wrap">
+    <div id="content"></div>
+  </div>
+</div>
+<script>
+const DOCS = [
+  {
+    "id": 0,
+    "title": "README",
+    "filename": "komodo.client.readme",
+    "content": "# FEI Komodo Client\n\n```\nFile Exchange Interface (FEI) Version 5 Client Software Distribution\nJet Propulsion Laboratory, Mission Data Management Service (MDMS)\n```\n\nDocumentation is available in the `doc/` directory:\n\n| File | Description |\n|---|---|\n| [Installation Guide](installation.md) | Installation and setup |\n| [User's Guide](users-guide.md) | Commands and operations |\n| [Appendix A — Command Reference](appendix-a-command-reference.md) | Complete command reference |\n| [Appendix B — Troubleshooting](appendix-b-troubleshooting.md) | Troubleshooting guide |\n\n---\n\n> **Note:** FEI requires OpenJDK 1.8 or higher (Java 8+).\n\nFor questions, bug reports, or feature requests: https://github.com/nasa-jpl/fei-client/issues\n"
+  },
+  {
+    "id": 1,
+    "title": "Installation Guide",
+    "filename": "installation.md",
+    "content": "# FEI Komodo Client — Installation Guide\n\n> **Note:** Originally published March 2004 for FEI version 5.1.4. Content updated where applicable.\n\n---\n\n## Table of Contents\n\n1. [Requirements](#1-requirements)\n2. [Distribution Layout](#2-distribution-layout)\n3. [Installation on Unix/Linux/macOS](#3-installation-on-unixlinuxmacos)\n4. [Installation on Windows](#4-installation-on-windows)\n5. [Verifying the Installation](#5-verifying-the-installation)\n6. [Support](#6-support)\n\n---\n\n## 1. Requirements\n\n### Java\n\nFEI requires **OpenJDK 17 or higher**. Download from https://adoptium.net/ or https://openjdk.org/\n\n### Operating Systems\n\n| Platform | Version |\n|---|---|\n| Linux (RHEL/CentOS/Ubuntu) | Current supported releases |\n| macOS | 10.15 (Catalina) and later |\n| Windows | 10, 11 |\n\n### Distribution Archive\n\n- **Unix/Linux/macOS:** `mdms-komodo-client-<version>-fei5.tar.gz`\n- **Windows:** `mdms-komodo-client-<version>-fei5.zip`\n\n---\n\n## 2. Distribution Layout\n\n```\nfei5/\n├── README\n├── use_FEI5.sh\n├── use_FEI5.csh\n├── bin/\n│   ├── fei5                  Main entry point\n│   ├── fei5add               Add files\n│   ├── fei5get               Retrieve files\n│   ├── fei5list              List files\n│   ├── fei5delete            Delete files\n│   ├── fei5replace           Replace files\n│   ├── fei5rename            Rename files\n│   ├── fei5comment           Add comments to files\n│   ├── fei5crc               Checksum verification\n│   ├── fei5subscribe         Subscribe to file-arrival events\n│   ├── fei5notify            Notification without download\n│   ├── fei5guardian          Auto-restarting subscription daemon\n│   ├── fei5filetypes         List registered file types\n│   ├── fei5admin             Administration\n│   ├── fei5changepassword    Change password\n│   └── fei5kinit / fei5klist / fei5kdestroy\n├── config/\n│   ├── domain.fei            FEI domain/server map (site-specific)\n│   ├── mdms-fei.keystore     SSL keystore (site-specific)\n│   ├── public.der\n│   ├── mdmsgui.lcf\n│   └── mdms.lcf\n├── doc/\n│   ├── installation.md\n│   ├── users-guide.md\n│   ├── appendix-a-command-reference.md\n│   └── appendix-b-troubleshooting.md\n└── lib/\n    └── *.jar\n```\n\n---\n\n## 3. Installation on Unix/Linux/macOS\n\n### Step 1: Extract\n\n```bash\ntar -xzf mdms-komodo-client-<version>-fei5.tar.gz\n```\n\n### Step 2: Set Environment Variables\n\n**Bash/sh:**\n```bash\nsource fei5/use_FEI5.sh\n```\n\n**csh/tcsh:**\n```csh\nsource fei5/use_FEI5.csh\n```\n\nAdd this to your shell profile (`~/.bashrc`, `~/.bash_profile`, etc.) for persistence.\n\nThe script sets:\n- `FEI5` — points to `fei5/config/`\n- `PATH` — prepends `fei5/bin/`\n\nIf you need a specific JDK:\n\n```bash\nexport JAVA_HOME=/usr/lib/jvm/java-17-openjdk\nsource fei5/use_FEI5.sh\n```\n\n### Step 3: Configure Domain and SSL\n\n```bash\ncp /path/to/domain.fei fei5/config/\ncp /path/to/mdms-fei.keystore fei5/config/\n```\n\n---\n\n## 4. Installation on Windows\n\n### Step 1: Extract\n\nUse Windows Explorer or a ZIP utility to extract the `.zip` archive.\n\n### Step 2: Set Environment Variables\n\n```cmd\nfei5\\use_FEI5.bat\n```\n\nFor persistent settings via **System Properties → Environment Variables**:\n\n| Variable | Value |\n|---|---|\n| `FEI5` | Full path to `fei5\\config\\` |\n| `PATH` | Append `C:\\fei5\\bin` |\n| `JAVA_HOME` | Path to JDK root (optional) |\n\n### Step 3: Configure Domain and SSL\n\nCopy `domain.fei` and `mdms-fei.keystore` into `fei5\\config\\`.\n\n---\n\n## 5. Verifying the Installation\n\n```bash\nfei5list --help\n```\n\n---\n\n## 6. Support\n\nhttps://github.com/nasa-jpl/fei-client/issues\n"
+  },
+  {
+    "id": 2,
+    "title": "User's Guide",
+    "filename": "users-guide.md",
+    "content": "# FEI Komodo Client — User's Guide\n\n> **Note:** Originally published March 2004 for FEI version 5.1.4. Content updated where applicable.\n>\n> See also: [Appendix A — Command Reference](appendix-a-command-reference.md) | [Appendix B — Troubleshooting](appendix-b-troubleshooting.md)\n\n---\n\n## Table of Contents\n\n1. [Introduction](#1-introduction)\n2. [Getting Started](#2-getting-started)\n3. [Authentication](#3-authentication)\n4. [File Operations](#4-file-operations)\n5. [Interactive Session Mode](#5-interactive-session-mode-fei5)\n6. [Subscription and Notification](#6-subscription-and-notification)\n7. [Administration Commands](#7-administration-commands)\n8. [Graphical User Interface (Savannah)](#8-graphical-user-interface-savannah)\n\n---\n\n## 1. Introduction\n\nThe File Exchange Interface (FEI) is a client-server system developed at JPL MDMS for transferring files between clients and a central server. FEI provides:\n\n- Reliable file add, get, delete, replace, and rename operations\n- File type management and access control\n- Event-driven subscription and notification\n- SSL-secured communications\n- Both command-line and graphical (Savannah) interfaces\n\n### Key Concepts\n\n**Server group** — A named FEI server instance. Clients locate servers via `domain.fei` in `$FEI5/config/`.\n\n**File type** — A named container on a server group. Most commands address it as `servergroup:filetype`.\n\n**`$FEI5`** — Must point to the directory containing `domain.fei` and SSL keystore files.\n\n---\n\n## 2. Getting Started\n\n### Quick Workflow\n\n```bash\n# 1. Log in\nfei5kinit\n\n# 2. See available file types\nfei5filetypes servergroup\n\n# 3. List files\nfei5list servergroup:filetype\n\n# 4. Download files\nfei5get servergroup:filetype output /local/dir\n\n# 5. Log out\nfei5kdestroy\n```\n\n### Command Syntax\n\nFEI commands use **bare keyword tokens**, not dash-prefixed flags:\n\n```\nfei5get servergroup:filetype '*.fits' output /data/output after '2024-01-01 00:00:00'\n```\n\nGet help by appending `help`:\n\n```\nfei5get help\n```\n\n---\n\n## 3. Authentication\n\n### Log In (fei5kinit)\n\n```\nfei5kinit [<username> [<server group>]]\n```\n\nPrompts interactively if arguments are omitted. Writes an encrypted token to `~/.komodo/login`.\n\n### Check Credentials (fei5klist)\n\n```\nfei5klist\n```\n\n### Log Out (fei5kdestroy)\n\n```\nfei5kdestroy [<server group>]\n```\n\n### Change Password\n\n```\nfei5changepassword <server group>\n```\n\n---\n\n## 4. File Operations\n\n### Date/Time Format\n\nAll date filters use CCSDSA format:\n\n```\nYYYY-MM-DDThh:mm:ss.SSS\n```\n\n| Input | Interpreted as |\n|---|---|\n| `2024-06-15` | `2024-06-15T00:00:00.000` |\n| `2024-06-15T14:30` | `2024-06-15T14:30:00.000` |\n| `2024-06-15 14:30:00` | `2024-06-15T14:30:00.000` |\n\n---\n\n### 4.1 Adding Files\n\n```\nfei5add [servergroup:]filetype <file expression>\n        [comment '<text>'] [crc] [receipt] [autodelete]\n        [before|after <datetime>] | [between <dt1> and <dt2>]\n        [format '<fmt>'] [filehandler] [help]\n\nfei5add using <option file>\n```\n\n```bash\nfei5add mymission:science_data data001.fits\nfei5add mymission:science_data '*.fits' comment 'daily downlink'\n```\n\n### 4.2 Retrieving Files\n\n```\nfei5get [servergroup:]filetype ['<file expression>']\n        [output <path>] [replace|version] [crc] [saferead]\n        [before|after <datetime>] | [between <dt1> and <dt2>]\n        [diff] [replicate] [replicateroot <dir>] [help]\n```\n\n```bash\nfei5get mymission:science_data '*.fits' output /data/output\nfei5get mymission:science_data after '2024-01-01 00:00:00' replace\n```\n\n| Keyword | Description |\n|---|---|\n| `output <path>` | Local directory for downloaded files |\n| `replace` | Overwrite local file if it exists |\n| `version` | Download into a versioned filename |\n| `saferead` | Lock file on server during download |\n| `diff` | Only get files that differ locally |\n| `replicate` | Preserve server-side directory structure |\n\n### 4.3 Listing Files\n\n```\nfei5list [servergroup:]filetype ['<expression>'] [long | verylong]\n         [before|after <datetime>] | [between <dt1> and <dt2>] [help]\n```\n\n### 4.4 Deleting Files\n\n```\nfei5delete [servergroup:]filetype '<file expression>' [help]\n```\n\n> **Caution:** Deletion is permanent.\n\n### 4.5 Replacing Files\n\n```\nfei5replace [servergroup:]filetype <file expression>\n            [comment '<text>'] [crc] [receipt] [autodelete] [diff] [help]\n```\n\n### 4.6 Renaming Files\n\n```\nfei5rename [servergroup:]filetype <old name> <new name> [help]\n```\n\n### 4.7 Adding Comments\n\n```\nfei5comment [servergroup:]filetype <filename> '<comment text>' [help]\n```\n\n### 4.8 Checking Integrity\n\n```bash\nfei5crc [servergroup:]filetype ['<expression>']\nfei5check [servergroup:]filetype\nfei5checkfiles [servergroup:]filetype\n```\n\n### 4.9 Displaying File Contents\n\n```\nfei5display [servergroup:]filetype <filename> [help]\n```\n\n### 4.10 Listing File Types\n\n```\nfei5filetypes '[servergroup:][<expression>]'\nfei5filetypes srvgroups\n```\n\n---\n\n## 5. Interactive Session Mode (fei5)\n\n```\n$ fei5\nTESTGRP:>>\n```\n\n### Login\n\n```\nTESTGRP:>> login\nServer group>> TESTGRP\nUser name>> jsmith\nPassword>>\n```\n\n### Select File Type\n\n```\nTESTGRP:>> use science_data\nUsing file type TESTGRP:science_data\nTESTGRP:science_data>>\n```\n\n### File Commands\n\n```\nshow <expression>              (alias: s)\nshowLatest [<expression>]\nshowAfter <datetime>\nshowBetween <dt1> and <dt2>\n\nget <expression>               (alias: g)\ngetLatest [<expression>]\ngetAfter <datetime>\ngetBetween <dt1> and <dt2>\n\nadd <expression> [\"comment\"]   (alias: a)\nreplace <expression> [\"comment\"] (alias: r)\n\ndelete <expression>            (alias: d)\nrename <old> <new>             (alias: n)\ncomment <filename> \"<text>\"    (alias: c)\n```\n\n**Invoke on receipt:**\n\n```\nget *.fits invoke \"process.sh $fileName\"\n```\n\n| Variable | Expands to |\n|---|---|\n| `$fileName` | Full local path |\n| `$fileNameNoPath` | Filename only |\n| `$filePath` | Directory of downloaded file |\n| `$fileType` | FEI file type name |\n| `$serverGroup` | FEI server group name |\n| `$comment` | File comment metadata |\n\n### Session Settings\n\n```\nset <parameter> {on|off}\n```\n\n| Parameter | Default | Effect |\n|---|---|---|\n| `replaceFile` | off | Overwrite local file on get |\n| `versionFile` | off | Download into versioned filename |\n| `computeChecksum` | off | Verify CRC on every transfer |\n| `autoDelete` | off | Delete local file after add |\n| `safeRead` | off | Lock file on server during get |\n| `receipt` | off | Request delivery receipt |\n| `diff` | off | Only transfer files that differ |\n| `replicate` | off | Preserve server-side directory structure |\n| `restart` | off | Enable transfer resume and persist timestamp |\n| `verbose` | off | Print per-file transfer details |\n| `abort` | off | Abort batch file on first error |\n| `echo` | on | Echo commands in batch mode |\n| `test` | off | Dry-run mode |\n| `timer` | off | Print elapsed time per command |\n\n### Utility Commands\n\n```\nshowTypes                    List all file types on current server group\nsetDefaultGroup <group>      Switch server group\nshowCapabilities [<type>]    Show your access capabilities\nshowDomainFile               Print domain.fei contents\nmakeDomainFile <path>        Write fresh domain.fei\ndateFormat [\"<fmt>\"]         Set/show date format\nlogFile <filename>           Write session transcript to file\nhistory <number>             Repeat last N commands\ncd / ls / pwd                Local filesystem navigation\nversion                      Print FEI client version\nchangePassword               Change password interactively\n```\n\n### Virtual File Types (VFT)\n\n> **Deprecation notice:** VFT is a legacy feature expected to be removed in a future release. Do not design new workflows around VFTs.\n\n```\naddVFT <vft> [\"<comment>\"]\ndelVFT <vft>\n\naddReference <vft> <ref> [<link>] [\"<comment>\"]\nsetReference <vft> <ref> [<fileType> <fileName>]\nupdateVFT <vft> [\"<comment>\"]\ncancelReference <vft> <ref>\ndelReference <vft> <ref>\n\ngetVFT <vft> [<datetime>]\ngetReference <vft> <ref> [<datetime>]\n\nshowVFT [<vft>] [<datetime>]\n```\n\n### Batch Mode\n\n```bash\nfei5 -b /path/to/script.fei5\n```\n\nExample batch file:\n\n```\n# Retrieve new science files\nlogin jsmith mymission\nuse mymission:science_data\nset output /data/science\nset replace on\nset abort on\nget *\n```\n\n**Repeat scheduling:**\n\n```\nbatch <file> repeatAt <hh:mm> {am|pm}\nbatch <file> repeatEvery <hh:mm> [<starttime> {am|pm}]\n```\n\n### Exit\n\n```\nexit    (aliases: quit, bye, lo)\n```\n\n---\n\n## 6. Subscription and Notification\n\n### fei5subscribe\n\n```\nfei5subscribe [servergroup:]filetype\n              [output <path>] [restart] [using <option file>]\n              [pull|push] [replace|version] [diff] [help]\n```\n\n```bash\nfei5subscribe mymission:science_data output /data/incoming\nfei5subscribe mymission:science_data output /data/incoming restart\n```\n\n**Option file keywords:**\n\n| Keyword | Description |\n|---|---|\n| `crc` | Verify CRC on receipt |\n| `diff` | Only retrieve files that differ locally |\n| `invoke <command>` | Run command after each file is received |\n| `invokeExitOnError` | Stop if invoked command exits non-zero |\n| `invokeAsync` | Run invoked command asynchronously |\n| `logFile <filename>` | Write subscription log to file |\n| `logFileRolling <interval>` | Roll log: monthly weekly daily hourly |\n| `mailMessageTo <addr,...>` | Per-file email notification recipients |\n| `mailSMTPHost <host>` | SMTP relay host |\n| `replace` | Overwrite local file if it already exists |\n\n### fei5guardian\n\nAuto-restarting daemon (Unix/Linux/macOS only):\n\n```\nfei5guardian [servergroup:]filetype [output <path>] [using <file>] [help]\n```\n\n### fei5notify\n\n```\nfei5notify [servergroup:]filetype [help]\n```\n\n---\n\n## 7. Administration Commands\n\nThese commands require administrative privileges.\n\n### Non-Interactive Wrappers\n\n```bash\nfei5register [servergroup:]filetype\nfei5unregister [servergroup:]filetype\nfei5locktype [servergroup:]filetype\nfei5unlocktype [servergroup:]filetype\nfei5accept [servergroup:]filetype for <add|replace|get|delete>\n```\n\n### Interactive Admin Session (fei5admin)\n\n```\n$ fei5admin\nTESTGRP:>>\n```\n\n**User management:**\n\n```\naddUser <name> <password> [<privilege>]\ndelUser <name>\nshowUsers [<name>]\naddUserToRole <name> <role>\ndelUserFromRole <name> <role>\nmodifyUserAccess <user> <level> {on|off}\n```\n\n| Privilege | Meaning |\n|---|---|\n| `a` | Admin — full server administration |\n| `r` | Read — get, show, subscribe only |\n| `w` | Write — read + add, replace, delete, rename |\n| `p` | VFT — Virtual File Type access |\n\n**Role management:**\n\n```\naddRole <role> <capabilities>\ndelRole <role>\nmodifyRole <role> <add|delete|set> <capabilities>\nshowRoles [<role>]\n```\n\n**File type management:**\n\n```\naddFileType <name> <dir> \"<comment>\" ...\naddFileTypeToRole <filetype> <role>\ndelFileType <filetype>\nshowFileTypes [<expression>]\nmodifyFileType <filetype> <field> <value>\n```\n\n**Server operations:**\n\n```\nhotboot                     Reload server configuration\nshutdown <timeout>          Shut down the server (0-300s)\nfSync [<filetype>]          Sync database to filesystem\ndSync [<filetype>]          Sync filesystem to database\nshowMemory                  Show server JVM memory usage\nshowServerParameters        Show server configuration\n```\n\n---\n\n## 8. Graphical User Interface (Savannah)\n\n### Launch\n\n```bash\nfei5gui\n```\n\n### Main Window\n\n**Remote panel:** connected server group, file types, file listing with name/size/date/comment/CRC. Toolbar for get/add/delete/replace/rename/comment.\n\n**Local panel:** browse local filesystem. Drag to/from remote panel to upload/download.\n\n### Look and Feel\n\n```bash\njava -Dkomodo.ui.lookandfeel=native ... fei5gui\n```\n\n---\n\nFor command-line reference, see [Appendix A](appendix-a-command-reference.md).\nFor troubleshooting, see [Appendix B](appendix-b-troubleshooting.md).\n"
+  },
+  {
+    "id": 3,
+    "title": "Appendix A — Command Reference",
+    "filename": "appendix-a-command-reference.md",
+    "content": "# Appendix A — FEI Command Reference\n\n> Back to: [User's Guide](users-guide.md)\n\nAll commands are in `$FEI5/bin/`. FEI commands use **bare keyword tokens** — no dash-prefixed flags. Append `help` to any command for usage.\n\n---\n\n## Common Keywords\n\n| Keyword | Description |\n|---|---|\n| `before <datetime>` | Filter: files before this date |\n| `after <datetime>` | Filter: files after this date |\n| `between <dt1> and <dt2>` | Filter: files in date range |\n| `format '<fmt>'` | Date format string |\n| `crc` | Enable CRC checksum verification |\n| `receipt` | Request delivery receipt |\n| `filehandler` | Invoke a configured file handler |\n| `help` | Display command usage |\n\n> **Note:** Credentials are read automatically from `~/.komodo/login` (written by `fei5kinit`). Do not pass user/password on the command line.\n\nDefault date format: `YYYY-MM-DDThh:mm:ss.SSS`\n\n---\n\n## Authentication Commands\n\n### fei5kinit\n\n```\nfei5kinit [<username> [<server group>]]\n```\n\n### fei5kdestroy\n\n```\nfei5kdestroy [<server group>]\n```\n\n### fei5klist\n\n```\nfei5klist\n```\n\n### fei5changepassword\n\n```\nfei5changepassword <server group>\n```\n\n---\n\n## File Operation Commands\n\n### fei5add\n\n```\nfei5add [servergroup:]filetype <file expression>\n        [before|after <datetime>] | [between <dt1> and <dt2>]\n        [format '<fmt>'] [comment '<text>']\n        [crc] [receipt] [autodelete] [filehandler] [help]\nfei5add using <option file>\n```\n\n### fei5get\n\n```\nfei5get [servergroup:]filetype ['<expression>']\n        [output <path>]\n        [before|after <datetime>] | [between <dt1> and <dt2>]\n        [format '<fmt>'] [crc] [saferead] [receipt]\n        [replace|version] [diff]\n        [replicate] [replicateroot <dir>] [filehandler] [help]\nfei5get using <option file>\n```\n\n| Keyword | Description |\n|---|---|\n| `output <path>` | Local directory for downloaded files |\n| `replace` | Overwrite local file if it exists |\n| `version` | Download into a versioned filename |\n| `saferead` | Lock file on server during download |\n| `diff` | Only get files that differ locally |\n| `replicate` | Preserve server-side directory structure |\n| `replicateroot <dir>` | Root directory for replicated structure |\n\n### fei5list\n\n```\nfei5list [servergroup:]filetype ['<expression>']\n         [before|after <datetime>] | [between <dt1> and <dt2>]\n         [format '<fmt>'] [long | verylong]\n         [query <queryfile>] [filehandler] [help]\n```\n\n### fei5delete\n\n```\nfei5delete [servergroup:]filetype '<file expression>'\n           [filehandler] [help]\nfei5delete using <option file>\n```\n\n> **Caution:** Deletion is permanent.\n\n### fei5replace\n\n```\nfei5replace [servergroup:]filetype <expression>\n            [before|after <datetime>] | [between <dt1> and <dt2>]\n            [comment '<text>'] [crc] [receipt] [autodelete] [diff] [help]\n```\n\n### fei5rename\n\n```\nfei5rename [servergroup:]filetype <old name> <new name> [help]\n```\n\n### fei5comment\n\n```\nfei5comment [servergroup:]filetype <filename> '<comment text>' [help]\n```\n\n### fei5crc\n\n```\nfei5crc [servergroup:]filetype ['<expression>'] [help]\n```\n\n### fei5check / fei5checkfiles\n\n```\nfei5check [servergroup:]filetype [help]\nfei5checkfiles [servergroup:]filetype [help]\n```\n\n### fei5display\n\n```\nfei5display [servergroup:]filetype <filename> [help]\n```\n\n---\n\n## Virtual File Type (VFT) Commands\n\n> **Deprecation notice:** VFT subsystem is a legacy feature expected to be removed in a future release.\n\nVFT commands are interactive session only (`fei5` / `fei5 -b`). See [User's Guide section 5.6](users-guide.md#56-virtual-file-types-vft).\n\n### addVFT / delVFT\n\n```\naddVFT <vft> [\"<comment>\"]\ndelVFT <vft>\n```\n\n### addReference / setReference / updateVFT\n\n```\naddReference <vft> <ref> [<link>] [\"<comment>\"]\nsetReference <vft> <ref> [<fileType> <fileName>]\nupdateVFT <vft> [\"<comment>\"]\n```\n\n### cancelReference / delReference\n\n```\ncancelReference <vft> <ref>\ndelReference <vft> <ref>\n```\n\n### getVFT / getReference\n\n```\ngetVFT <vft> [<datetime>]\ngetReference <vft> <ref> [<datetime>]\n```\n\n### showVFT\n\n```\nshowVFT\nshowVFT <vft>\nshowVFT <vft> <datetime>\n```\n\n### addVFTReader / delVFTReader / showVFTReaders\n\n```\naddVFTReader <vft> <osUser>\ndelVFTReader <vft> <osUser>\nshowVFTReaders <vft> [<osUser>]\n```\n\n---\n\n## Subscription Commands\n\n### fei5subscribe\n\n```\nfei5subscribe [servergroup:]filetype\n              [output <path>] [restart] [using <option file>]\n              [pull|push] [replace|version]\n              [replicate] [replicateroot <dir>] [diff] [help]\n```\n\n**Option file keywords:**\n\n| Keyword | Description |\n|---|---|\n| `crc` | Verify CRC on receipt |\n| `diff` | Only retrieve files that differ |\n| `invoke <command>` | Run command after each file |\n| `invokeExitOnError` | Stop on non-zero exit |\n| `invokeAsync` | Run invoked command asynchronously |\n| `logFile <filename>` | Subscription log file |\n| `logFileRolling <interval>` | Roll log: monthly weekly daily hourly minutely halfdaily |\n| `mailMessageFrom <addr>` | Per-file email sender |\n| `mailMessageTo <addr,...>` | Per-file email recipients |\n| `mailReportAt <hh:mm am/pm,...>` | Summary report schedule |\n| `mailSMTPHost <host>` | SMTP relay host |\n| `replace` | Overwrite local file if it exists |\n| `saferead` | Lock file on server during download |\n| `version` | Download into a versioned filename |\n\n### fei5guardian\n\n```\nfei5guardian [servergroup:]filetype [output <path>] [using <file>] [help]\n```\n\n### fei5notify\n\n```\nfei5notify [servergroup:]filetype [help]\n```\n\n---\n\n## Information and Utility Commands\n\n### fei5filetypes\n\n```\nfei5filetypes '[servergroup:][<expression>]'\nfei5filetypes srvgroups\n```\n\n### fei5showhandlers\n\n```\nfei5showhandlers\n```\n\n### fei5makeclean\n\n```\nfei5makeclean [servergroup:]filetype [help]\n```\n\n### fei5reference\n\n```\nfei5reference\n```\n\n### fei5gui\n\n```\nfei5gui\n```\n\n---\n\n## Administration Commands\n\n### fei5register / fei5unregister\n\n```\nfei5register [servergroup:]filetype [help]\nfei5unregister [servergroup:]filetype [help]\n```\n\n### fei5locktype / fei5unlocktype\n\n```\nfei5locktype [servergroup:]filetype [help]\nfei5unlocktype [servergroup:]filetype [help]\n```\n\n### fei5accept\n\n```\nfei5accept [servergroup:]filetype for <add|replace|get|delete>\n           [output <path>] [crc] [saferead] [autodelete] [replace|version] [diff] [help]\n```\n\n### fei5admin\n\n```\nfei5admin [-b <batch file>]\n```\n\n| Category | Sub-commands |\n|---|---|\n| Users | addUser, delUser, showUsers, addUserToRole, delUserFromRole, modifyUserAccess |\n| Roles | addRole, delRole, modifyRole, showRoles, showUsersForRole |\n| File types | addFileType, delFileType, modifyFileType, showFileTypes, addFileTypeToRole |\n| Locks | showLocks, setLock |\n| Server | connect, focus, hotboot, shutdown, fSync, dSync, showMemory, showServerParameters |\n\n### fei5encrypt\n\n```\nfei5encrypt\n```\n\n> **Note:** Used during server bootstrap only. Normal users do not need this command.\n\n---\n\nBack to [User's Guide](users-guide.md) | See also [Appendix B — Troubleshooting](appendix-b-troubleshooting.md)\n"
+  },
+  {
+    "id": 4,
+    "title": "Appendix B — Troubleshooting",
+    "filename": "appendix-b-troubleshooting.md",
+    "content": "# Appendix B — Troubleshooting\n\n> Back to: [User's Guide](users-guide.md) | [Appendix A](appendix-a-command-reference.md)\n\n---\n\n## Common Issues\n\n### Command Not Found\n\n**Symptom:** `command not found` when running any `fei5*` command.\n\n**Resolution:**\n\n```bash\necho $FEI5\necho $PATH\nsource $FEI5/use_FEI5.sh\n```\n\n---\n\n### SSL / Keystore Errors\n\n**Symptom:** `SSLHandshakeException`, `certificate`, or `keystore` errors.\n\n**Resolution:**\n\n1. Verify `domain.fei` and `mdms-fei.keystore` are in `$FEI5/config/`\n2. Ensure the keystore is not corrupted\n3. Check Java version: `java -version`\n\n---\n\n### Authentication Failures\n\n**Symptom:** `Authentication failed` or `Invalid username or password`.\n\n**Resolution:**\n\n1. Verify credentials with your FEI server administrator\n2. If password expired, run `fei5changepassword`\n3. Re-run `fei5kinit` to refresh stale tokens\n\n---\n\n### Cannot Connect to Server\n\n**Symptom:** `Connection refused`, `Connection timed out`, or `UnknownHostException`.\n\n**Resolution:**\n\n1. Verify `domain.fei` has correct hostname and port\n2. Check network connectivity with ping and telnet\n3. Check for firewall rules blocking the FEI port\n\n---\n\n### Subscription Stops Receiving Files\n\n**Symptom:** `fei5subscribe` stops receiving files without error.\n\n**Resolution:**\n\nUse `fei5guardian` for automatic restart:\n\n```bash\nfei5guardian servergroup:filetype output /output/dir\n```\n\n---\n\n### File Add/Get Fails with Checksum Error\n\n**Symptom:** CRC or checksum mismatch during transfer.\n\n**Resolution:**\n\n1. Retry — transient network errors can cause this\n2. Check stored CRC: `fei5crc servergroup:filetype filename`\n\n---\n\n### Java OutOfMemoryError\n\n**Symptom:** `java.lang.OutOfMemoryError` on large files.\n\n**Resolution:**\n\n```bash\nexport JAVA_OPTS=\"-Xmx512m\"\nfei5get mymission:science_data\n```\n\n---\n\n### Enabling Verbose Logging\n\nEdit `$FEI5/config/mdms.lcf` (CLI) or `$FEI5/config/mdmsgui.lcf` (GUI):\n\n```xml\n<!-- Default -->\n<Root level=\"INFO\" additivity=\"true\">\n\n<!-- Debug -->\n<Root level=\"DEBUG\" additivity=\"true\">\n\n<!-- Maximum detail -->\n<Root level=\"TRACE\" additivity=\"true\">\n```\n\nRestore to `INFO` after diagnosing.\n\n---\n\n### SSL Certificate Out of Date\n\n**Symptom:** `PKIX path building failed` or `Certificate expired`.\n\n**Resolution:**\n\n```bash\nkeytool -list -v -keystore $FEI5/config/mdms-fei.keystore\n```\n\nIf expired, obtain updated `public.der` and `mdms-fei.keystore` from your FEI server administrator.\n\n---\n\n### File type not selected\n\n**Symptom:** File operation in interactive session produces `File type not selected`.\n\n**Resolution:**\n\n```\nfei5>> use mymission:science_data\nmymission:science_data>> get *.fits\n```\n\n---\n\n### Group not found / Filetype not found\n\n**Symptom:** `Group mymission not found in domain!`\n\n**Resolution:**\n\n```bash\nfei5filetypes srvgroups\nfei5filetypes 'mymission:*'\n```\n\nConfirm `domain.fei` in `$FEI5/config/` is current.\n\n---\n\n### File already exists\n\n**Server-side duplicate (add):** Use `replace`:\n\n```bash\nfei5replace mymission:science_data data001.fits\n```\n\n**Local duplicate (get):** Use `replace` or `version`:\n\n```bash\nfei5get mymission:science_data data001.fits replace\nfei5get mymission:science_data data001.fits version\n```\n\n---\n\n### Filetype operation access denied\n\n**Symptom:** `Read access for this filetype is denied`.\n\n**Resolution:**\n\nContact your FEI server administrator to grant read access via `fei5admin` using `addFileTypeToRole` and `addUserToRole`.\n\n---\n\n## Getting Help\n\nhttps://github.com/nasa-jpl/fei-client/issues\n\nInclude: exact command, full error message, `java -version` output, OS and version.\n"
+  }
+];
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function slug(t){
+  return t.replace(/`[^`]*`/g,function(s){return s.slice(1,-1);})
+    .toLowerCase().replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+}
+
+function inline(s){
+  // protect inline code first
+  var parts=[], re=/`([^`]+)`/g, m, last=0;
+  while((m=re.exec(s))!==null){
+    parts.push({t:'text',v:s.slice(last,m.index)});
+    parts.push({t:'code',v:m[1]});
+    last=m.index+m[0].length;
+  }
+  parts.push({t:'text',v:s.slice(last)});
+  return parts.map(function(p){
+    if(p.t==='code') return '<code>'+esc(p.v)+'</code>';
+    var t=esc(p.v);
+    // links [text](url)
+    t=t.replace(/\[([^\]]+)\]\(([^)]+)\)/g,function(_,txt,url){
+      if(url.charAt(0)==='#') return '<a href="'+url+'">'+txt+'</a>';
+      if(url.slice(-3)==='.md'||url.indexOf('.md#')!==-1){
+        var base=url.split('#')[0];
+        var anchor=url.indexOf('#')!==-1?url.split('#')[1]:'';
+        return '<a href="#" onclick="openRelativeDoc(\''+base+'\',\''+anchor+'\');return false;">'+txt+'</a>';
+      }
+      return '<a href="'+url+'" target="_blank" rel="noopener">'+txt+'</a>';
+    });
+    // bare urls (already escaped so < > became &lt; &gt;)
+    t=t.replace(/https?:\/\/[^\s<>"]+/g,function(u){return '<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>';});
+    // bold+italic
+    t=t.replace(/\*\*\*([^*]+)\*\*\*/g,'<strong><em>$1</em></strong>');
+    t=t.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+    t=t.replace(/__([^_]+)__/g,'<strong>$1</strong>');
+    t=t.replace(/\*([^*\r\n]+)\*/g,'<em>$1</em>');
+    return t;
+  }).join('');
+}
+
+function buildList(ls,ordered){
+  var tag=ordered?'ol':'ul';
+  var re=ordered?/^(\s*)\d+\.\s(.*)$/:/^(\s*)[-*+]\s(.*)$/;
+  var items=[];
+  ls.forEach(function(l){
+    var m=l.match(re);
+    if(m){items.push(inline(m[2]));}
+    else if(items.length){items[items.length-1]+=' '+inline(l.trim());}
+  });
+  return '<'+tag+'>'+items.map(function(it){return '<li>'+it+'</li>';}).join('')+'</'+tag+'>';
+}
+
+function mdToHtml(md){
+  var lines=md.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  var out=[], i=0;
+  while(i<lines.length){
+    var line=lines[i];
+    // fenced code block
+    var fm=line.match(/^(`{3,}|~{3,})(.*)?$/);
+    if(fm){
+      var fence=fm[1], lang=(fm[2]||'').trim(); i++;
+      var cl=[];
+      while(i<lines.length&&lines[i].slice(0,fence.length)!==fence){cl.push(esc(lines[i]));i++;}
+      i++;
+      out.push('<pre><code'+(lang?' class="language-'+lang+'"':'')+'>'+cl.join('\n')+'</code></pre>');
+      continue;
+    }
+    // ATX heading
+    var hm=line.match(/^(#{1,6})\s+(.*?)(?:\s+#+)?$/);
+    if(hm){
+      var lvl=hm[1].length, txt=hm[2], id=slug(txt);
+      out.push('<h'+lvl+' id="'+id+'">'+inline(txt)+'</h'+lvl+'>');
+      i++; continue;
+    }
+    // hr
+    if(line.match(/^-{3,}$/)||line.match(/^\*{3,}$/)||line.match(/^_{3,}$/)){
+      out.push('<hr>'); i++; continue;
+    }
+    // blockquote
+    if(line.slice(0,2)==='> '||line==='>'){
+      var bq=[];
+      while(i<lines.length&&(lines[i].slice(0,2)==='> '||lines[i]==='>')){
+        bq.push(lines[i].replace(/^>\s?/,'')); i++;
+      }
+      out.push('<blockquote>'+mdToHtml(bq.join('\n'))+'</blockquote>');
+      continue;
+    }
+    // table
+    if(line.indexOf('|')!==-1&&i+1<lines.length&&lines[i+1].match(/^\|?[\s\-|:]+\|?$/)){
+      var tl=[];
+      while(i<lines.length&&lines[i].indexOf('|')!==-1){tl.push(lines[i]);i++;}
+      if(tl.length>=2){
+        var pr=function(r){return r.replace(/^\||\|$/g,'').split('|').map(function(c){return c.trim();});};
+        var hdr=pr(tl[0]), rows=tl.slice(2).map(pr);
+        var t='<table><thead><tr>'+hdr.map(function(h){return '<th>'+inline(h)+'</th>';}).join('')+'</tr></thead><tbody>';
+        t+=rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+inline(c)+'</td>';}).join('')+'</tr>';}).join('');
+        t+='</tbody></table>';
+        out.push(t);
+      }
+      continue;
+    }
+    // unordered list
+    if(line.match(/^(\s*)[-*+]\s/)){
+      var ul=[];
+      while(i<lines.length&&(lines[i].match(/^(\s*)[-*+]\s/)||lines[i].match(/^\s{2,}/))){ul.push(lines[i]);i++;}
+      out.push(buildList(ul,false)); continue;
+    }
+    // ordered list
+    if(line.match(/^(\s*)\d+\.\s/)){
+      var ol=[];
+      while(i<lines.length&&(lines[i].match(/^(\s*)\d+\.\s/)||lines[i].match(/^\s{2,}/))){ol.push(lines[i]);i++;}
+      out.push(buildList(ol,true)); continue;
+    }
+    // blank
+    if(line.trim()===''){i++;continue;}
+    // paragraph
+    var pl=[];
+    while(i<lines.length){
+      var l=lines[i];
+      if(l.trim()==='') break;
+      if(l.match(/^#{1,6}\s/)||l.match(/^(`{3,}|~{3,})/)||l.match(/^-{3,}$/)||l.match(/^\*{3,}$/)) break;
+      if(l.slice(0,2)==='> '||l==='>') break;
+      if(l.match(/^(\s*)[-*+]\s/)||l.match(/^(\s*)\d+\.\s/)) break;
+      pl.push(l); i++;
+    }
+    if(pl.length) out.push('<p>'+inline(pl.join(' '))+'</p>');
+  }
+  return out.join('\n');
+}
+
+var filenameToId={};
+DOCS.forEach(function(d){filenameToId[d.filename]=d.id;});
+
+function openRelativeDoc(filename,anchor){
+  var id=filenameToId[filename];
+  if(id!==undefined) loadDoc(id,anchor||'');
+}
+
+function showTab(tab){
+  document.getElementById('nav-panel').style.display=tab==='nav'?'':'none';
+  document.getElementById('toc-panel').style.display=tab==='toc'?'':'none';
+  document.getElementById('tab-nav').classList.toggle('active',tab==='nav');
+  document.getElementById('tab-toc').classList.toggle('active',tab==='toc');
+}
+
+function buildToc(html){
+  var tmp=document.createElement('div'); tmp.innerHTML=html;
+  var hs=tmp.querySelectorAll('h1,h2,h3,h4');
+  if(!hs.length) return '';
+  return Array.from(hs).map(function(h){
+    var lvl=parseInt(h.tagName[1]);
+    return '<li><a href="#" class="h'+lvl+'" onclick="scrollToId(\''+h.id+'\');return false;">'+h.textContent+'</a></li>';
+  }).join('');
+}
+
+function scrollToId(id){
+  var el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+var currentDoc=-1;
+function loadDoc(id,anchor){
+  var doc=DOCS[id]; if(!doc) return;
+  if(currentDoc>=0) document.getElementById('nav-'+currentDoc).classList.remove('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  currentDoc=id;
+  var html=mdToHtml(doc.content);
+  var el=document.getElementById('content');
+  el.innerHTML=html; el.scrollTop=0;
+  document.getElementById('toc-list').innerHTML=buildToc(html);
+  if(anchor) setTimeout(function(){scrollToId(anchor);},60);
+}
+
+loadDoc(0);
+</script>
+</body>
+</html>
