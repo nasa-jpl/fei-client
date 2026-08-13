@@ -18,6 +18,7 @@ import java.io.InputStream;
 
 import jpl.mipl.mdms.FileService.komodo.api.Constants;
 import jpl.mipl.mdms.FileService.komodo.help.ClientHelp;
+import jpl.mipl.mdms.FileService.net.SecureSocketsUtil;
 import jpl.mipl.mdms.utils.logging.Logger;
 
 /**
@@ -42,6 +43,7 @@ public class BaseClient {
     * @throws Exception when general failure
     */
    public BaseClient(String[] args) throws IOException, Exception {
+      SecureSocketsUtil.ensureFipsProviderInitialized();
       this._parseArgs(args);
       this._initializeHelp();
       this._createRegistry();

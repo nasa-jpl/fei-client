@@ -20,6 +20,6 @@ package jpl.mipl.mdms.FileService.komodo.client;
  
  public interface Constants extends jpl.mipl.mdms.FileService.komodo.api.Constants
  {
-    public static final String CLIENTVERSIONSTR = "FEI5 release 2.4.2, October 2022";   //updated 10/18/2022
+    public static final String CLIENTVERSIONSTR = VersionInfo.CLIENT_VERSION_STR;
  }
  
