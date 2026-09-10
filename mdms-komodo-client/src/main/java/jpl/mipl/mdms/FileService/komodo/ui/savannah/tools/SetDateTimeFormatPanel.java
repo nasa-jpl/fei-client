@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.tools;
 
 import java.awt.event.ActionEvent;
@@ -36,7 +48,7 @@ import jpl.mipl.mdms.FileService.util.DateTimeFormatter;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SetDateTimeFormatPanel.java,v 1.2 2009/05/27 22:43:51 ntt Exp $
+
  *
  */
 
@@ -48,7 +60,6 @@ public class SetDateTimeFormatPanel extends JPanel
     private javax.swing.JLabel infoLabel;
     private JRadioButton otherButton;
     protected JRadioButton utcButton;
-
 
     protected String defaultManualFormat = "yyyy.MM.dd G 'at' HH:mm:ss z";
     protected String format;
@@ -319,7 +330,6 @@ public class SetDateTimeFormatPanel extends JPanel
     {
         String[] groups = { "my group", "group grope", "music group"};
         String username = "mr_peterman";
-
 
         SetDateTimeFormatPanel panel = new SetDateTimeFormatPanel();
 

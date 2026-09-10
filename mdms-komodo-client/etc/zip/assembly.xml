@@ -19,7 +19,16 @@
             <directory>${project.basedir}${file.separator}etc${file.separator}docs</directory>
             <outputDirectory>${file.separator}doc${file.separator}pdf</outputDirectory>
             <includes>
-                <include>komodo*.pdf</include>
+                <include>[archived]komodo*.pdf</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}${file.separator}etc${file.separator}docs</directory>
+            <outputDirectory>${file.separator}doc</outputDirectory>
+            <includes>
+                <include>*.md</include>
+                <include>*.html</include>
             </includes>
         </fileSet>
 

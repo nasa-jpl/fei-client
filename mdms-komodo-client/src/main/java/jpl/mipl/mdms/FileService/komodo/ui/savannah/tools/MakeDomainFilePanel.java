@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.tools;
 
 import java.awt.Dimension;
@@ -25,14 +37,11 @@ public class MakeDomainFilePanel extends JPanel
     private javax.swing.JLabel serverGroupLabel;
     private javax.swing.JLabel outputFileLabel;
 
-
     JPanel domainfilePanel;
-
 
     private javax.swing.JComboBox sgComboBox;
     private javax.swing.JTextField domainfilePathField;
     private JButton domainfilePathButton;
-
 
     protected List<String> servergroups;
     protected File         directory;
@@ -65,7 +74,6 @@ public class MakeDomainFilePanel extends JPanel
         buildUI();
     }
 
-
     protected void buildUI()
     {
         initComponents();
@@ -74,7 +82,6 @@ public class MakeDomainFilePanel extends JPanel
 
         initListeners();
     }
-
 
     private void initComponents()
     {
@@ -102,7 +109,6 @@ public class MakeDomainFilePanel extends JPanel
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
         add(outputFileLabel, gridBagConstraints);
 
-
         domainfilePanel = new JPanel();
         domainfilePanel.setLayout(new GridBagLayout());
 
@@ -125,8 +131,6 @@ public class MakeDomainFilePanel extends JPanel
         gridBagConstraints.gridy = 0;
         domainfilePanel.add(domainfilePathButton, gridBagConstraints);
 
-
-
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.8;
@@ -140,7 +144,6 @@ public class MakeDomainFilePanel extends JPanel
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 10);
         add(domainfilePanel, gridBagConstraints);
 
-
     }
 
     protected void initListeners()
@@ -152,7 +155,6 @@ public class MakeDomainFilePanel extends JPanel
                 servergroup = (String) sgComboBox.getSelectedItem();
             }
         });
-
 
         //hack to convert action events into focus events for the field
         this.domainfilePathField.addActionListener(new ActionListener() {
@@ -222,8 +224,6 @@ public class MakeDomainFilePanel extends JPanel
         }
     }
 
-
-
     public File getOutputFile()
     {
         return this.newDomainFile;
@@ -234,11 +234,9 @@ public class MakeDomainFilePanel extends JPanel
         return this.servergroup;
     }
 
-
     public static void main(String[] args)
     {
         String[] groups = { "my group", "group grope", "music group"};
-
 
         MakeDomainFilePanel panel = new MakeDomainFilePanel(groups, null, null);
 

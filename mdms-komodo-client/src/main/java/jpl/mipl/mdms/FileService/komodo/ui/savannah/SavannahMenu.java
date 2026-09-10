@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah;
 
 import java.awt.BorderLayout;
@@ -41,8 +53,6 @@ import jpl.mipl.mdms.FileService.komodo.ui.savannah.tools.SetDateTimeFilterActio
 import jpl.mipl.mdms.FileService.komodo.ui.savannah.tools.SetDateTimeFormatAction;
 import jpl.mipl.mdms.FileService.komodo.util.ConfigFileURLResolver;
 
-
-
 /**
  * <b>Purpose:</b>
  *  Menu object to be used with MDMS FEI5 Savannah application.
@@ -65,7 +75,7 @@ import jpl.mipl.mdms.FileService.komodo.util.ConfigFileURLResolver;
  * </PRE>
  *
  * @author Nicholas Toole	(Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SavannahMenu.java,v 1.30 2013/04/04 20:48:50 ntt Exp $
+
  *
  */
 
@@ -216,7 +226,6 @@ public class SavannahMenu extends JMenuBar implements PropertyChangeListener
         domain_file_options.setMnemonic(KeyEvent.VK_D);
         options_menu.add(domain_file_options);
 
-
         //-------------------------
         //New Domain File
         new_domain_file_item = new JMenuItem("Select New Domain File");
@@ -282,7 +291,6 @@ public class SavannahMenu extends JMenuBar implements PropertyChangeListener
         //Date time options
         date_time_options_menu = new JMenu("Date/Time Options");
 
-
         set_date_filter_item = new JMenuItem("Edit Date Filter(s)");
         set_date_filter_item.addActionListener(
                                     new SetDateTimeFilterAction(this._viewPanel,
@@ -297,7 +305,6 @@ public class SavannahMenu extends JMenuBar implements PropertyChangeListener
         date_time_options_menu.add(set_date_time_format_item);
 
         options_menu.add(date_time_options_menu);
-
 
         //-------------------------------------
         //-------------------------------------
@@ -433,7 +440,6 @@ public class SavannahMenu extends JMenuBar implements PropertyChangeListener
         tools_menu.add(new JSeparator());
         tools_menu.add(tools_lock_unlock_filetype_item);
 
-
         //-------------------------
         //Metasubscription Manager Panel
 
@@ -497,9 +503,6 @@ public class SavannahMenu extends JMenuBar implements PropertyChangeListener
         });
         tools_menu.add(new JSeparator());
         tools_menu.add(tools_view_msm_item);
-
-
-
 
         //-------------------------------------
         //-------------------------------------
@@ -664,14 +667,12 @@ public class SavannahMenu extends JMenuBar implements PropertyChangeListener
             File parent = null, child = null;
             File newFile;
 
-
             try {
                 URI uri = curDomain.toURI();
                 child = new File(uri);
             } catch (Exception ex) {
                 child = null;
             }
-
 
             //if child exists, then opem chooser in the same dir,
             //otherwise open up in working dir
@@ -705,8 +706,6 @@ public class SavannahMenu extends JMenuBar implements PropertyChangeListener
             }
         }
     }
-
-
 
     //---------------------------------------------------------------------
     //---------------------------------------------------------------------

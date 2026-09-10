@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.client;
 
 import java.io.BufferedReader;
@@ -97,7 +109,7 @@ import jpl.mipl.mdms.utils.logging.Logger;
  *
  * @author Thomas Huang     (Thomas.Huang@jpl.nasa.gov)
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: UtilClient.java,v 1.194 2017/01/13 00:58:59 ntt Exp $
+
  *
  */
 
@@ -176,7 +188,6 @@ public class UtilClient
    private boolean _mailreport = false;
     
    
-
 
    //---------------------------------------------------------------------
 
@@ -3115,7 +3126,6 @@ public class UtilClient
              if (timeToExit)
                 break;
 
-
              
          } //end_if_results         
          
@@ -3437,7 +3447,6 @@ public class UtilClient
       if (outputDir == null)
          outputDir = System.getProperty("user.dir");
       //this._client.changeDir(outputDir);  //no longer using client
-
 
       //get the invoke command string
       String invoke = (String) this._argTable.get(CMD.INVOKE);
@@ -5859,8 +5868,6 @@ public class UtilClient
     */
    
    private void _checkConfig(boolean checkFiletype) throws SessionException {
-
-
 
       //---------------------------
       

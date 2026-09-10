@@ -1,4 +1,15 @@
 #!/bin/sh 
+
+# Copyright (c) 2026 by the California Institute of Technology.
+# ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+# Any commercial use must be negotiated with the Office of Technology
+# at the California Institute of Technology.
+#
+# The technical data in this document (or file) is controlled for export
+# under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+# Violations of these laws are subject to fines and penalties under the
+# Export Administration Act.
+
 #
 ### ==================================================================== ###
 #                                                                          #
@@ -7,15 +18,7 @@
 #  Function: Launches the FEI5 administrator client application.  NOTE:    # 
 #  The $FEI5 environment variable must point to the directory containing   #
 #                                                                          #
-#  Copyright (c) 2006 by the California Institute of Technology.           #
-#  ALL RIGHTS RESERVED.  United States Government Sponsorship              #
-#  acknowledged. Any commercial use must be negotiated with the            #
-#  Office of Technology at the California Institute of Technology.         #
 #                                                                          #
-#  The technical data in this document (or file) is controlled for         #
-#  export under the Export Administration Regulations (EAR), 15 CFR,       #
-#  Parts 730-774. Violations of these laws are subject to fines and        #
-#  penalties under the Export Administration Act.                          #
 #                                                                          #
 #                                                                          #
 #  Created:                                                                #
@@ -24,7 +27,6 @@
 #                                                                          #
 ### ==================================================================== ###
 #
-# $Id: fei5admin.sh,v 1.9 2008/07/31 22:58:53 ntt Exp $
 #
 
 MYNAME=`basename $0`

@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.tools;
 
 import java.awt.event.ActionEvent;
@@ -32,7 +44,6 @@ public class LockFileTypePanel extends JPanel
     private JRadioButton noneModeButton;
     private JRadioButton ownerModeButton;
     private JRadioButton groupModeButton;
-
 
     protected List<String> filetypes;
     protected String       operationMode;
@@ -82,7 +93,6 @@ public class LockFileTypePanel extends JPanel
             this.operation = Constants.LOCKFILETYPE;
         }
 
-
         //-------------------------
         //operation modifier
 
@@ -112,7 +122,6 @@ public class LockFileTypePanel extends JPanel
 
     //---------------------------------------------------------------------
 
-
     protected void initComponents()
     {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -129,7 +138,6 @@ public class LockFileTypePanel extends JPanel
 
         setName("Form"); // NOI18N
         setLayout(new java.awt.GridBagLayout());
-
 
         filetypeCombo.setName("filetypeComboBox"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -336,7 +344,6 @@ public class LockFileTypePanel extends JPanel
 
         this.filetype = (String) this.filetypeCombo.getSelectedItem();
 
-
         //-------------------------
 
         //init operation buttons initial state
@@ -413,8 +420,6 @@ public class LockFileTypePanel extends JPanel
     public static void main(String[] args)
     {
         String[] groups = { "dev:my group", "ops:group grope", "ops:music group"};
-
-
 
         LockFileTypePanel panel = new LockFileTypePanel(groups);
 

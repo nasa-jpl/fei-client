@@ -1,0 +1,671 @@
+# Appendix A — FEI Command Reference
+
+> Back to: [User's Guide](users-guide.md)
+
+This appendix provides a concise reference for all FEI client command-line utilities. All commands are located in `$FEI5/bin/` and require the `$FEI5` environment variable to be set.
+
+FEI commands use **bare keyword tokens** — there are no dash-prefixed flags. Append `help` to any command to display its usage.
+
+---
+
+## Common Keywords
+
+The following keywords are accepted by most file operation commands:
+
+| Keyword | Description |
+|---|---|
+| `before <datetime>` | Filter: only files added/modified before this date |
+| `after <datetime>` | Filter: only files added/modified after this date |
+| `between <dt1> and <dt2>` | Filter: only files in this date range |
+| `format '<fmt>'` | Date format string for date filters |
+| `crc` | Enable CRC checksum verification |
+| `receipt` | Request a delivery receipt from the server |
+| `filehandler` | Invoke a configured file handler |
+| `help` | Display command usage |
+
+> **Note:** `user` and `password` are **not** accepted by file operation commands. Credentials are read automatically from the `~/.komodo/login` cache written by `fei5kinit`. The `user` keyword is accepted only by `fei5kinit` itself.
+
+**Date/time format — CCSDSA (default):**
+```
+YYYY-MM-DDThh:mm:ss.SSS
+```
+Example: `2024-06-15T00:00:00.000`
+
+All time components are optional and default to zero when omitted. The `T` separator is also optional. The following are all valid and equivalent to `2024-06-15T00:00:00.000`:
+
+```
+2024-06-15
+2024-06-15T14
+2024-06-15T14:30
+2024-06-15T14:30:00
+2024-06-15 14:30:00
+```
+
+To use a different format for a single command, supply it with the `format` keyword:
+
+```
+fei5list mymission:science_data after '2024-06-15 00:00:00' format 'yyyy-MM-dd HH:mm:ss'
+```
+
+In an interactive session, change the format for the entire session with the `dateFormat` command.
+
+---
+
+## Authentication Commands
+
+### fei5kinit
+
+Log in to an FEI server group and store an encrypted credential token in `~/.komodo/login`.
+
+```
+fei5kinit [<username> [<server group>]]
+```
+
+Both arguments are optional; omitted values are prompted interactively. Run once per server group before using any file operation commands.
+
+---
+
+### fei5kdestroy
+
+Remove stored credentials for a server group.
+
+```
+fei5kdestroy [<server group>]
+```
+
+If no server group is given, removes all stored credentials.
+
+---
+
+### fei5klist
+
+List stored credential tokens and their expiry dates.
+
+```
+fei5klist
+```
+
+---
+
+### fei5changepassword
+
+Change your password on an FEI server group. Prompts for current and new passwords.
+
+```
+fei5changepassword <server group>
+```
+
+---
+
+## File Operation Commands
+
+### fei5add
+
+Add files to an FEI file type.
+
+```
+fei5add [servergroup:]filetype <file expression>
+        [before|after <datetime>] | [between <datetime1> and <datetime2>]
+        [format '<date format>'] [comment '<comment text>']
+        [crc] [receipt] [autodelete] [filehandler] [help]
+
+fei5add using <option file>
+```
+
+| Keyword | Description |
+|---|---|
+| `comment '<text>'` | Attach a comment to the added file(s) |
+| `autodelete` | Delete the local file after successful add |
+| `crc` | Compute and store CRC checksum |
+| `receipt` | Request delivery receipt |
+| `before`/`after`/`between...and` | Filter by file modification date |
+
+---
+
+### fei5get
+
+Retrieve files from an FEI file type.
+
+```
+fei5get [servergroup:]filetype ['<file expression>']
+        [output <path>]
+        [before|after <datetime>] | [between <datetime1> and <datetime2>]
+        [format '<date format>'] [crc] [saferead] [receipt]
+        [replace|version] [diff] [query <queryfile>]
+        [replicate] [replicateroot <rootdir>] [filehandler] [help]
+
+fei5get using <option file>
+```
+
+| Keyword | Description |
+|---|---|
+| `output <path>` | Local directory for downloaded files |
+| `replace` | Overwrite local file if it exists |
+| `version` | Download into a versioned filename |
+| `saferead` | Lock file on server during download |
+| `diff` | Only get files that differ from local copies |
+| `replicate` | Preserve server-side directory structure |
+| `replicateroot <dir>` | Root directory for replicated structure |
+| `query <file>` | Apply a query filter file |
+
+---
+
+### fei5list
+
+List files in an FEI file type.
+
+```
+fei5list [servergroup:]filetype ['<file expression>']
+         [before|after <datetime>] | [between <datetime1> and <datetime2>]
+         [format '<date format>'] [long | verylong]
+         [query <queryfile>] [filehandler] [help]
+```
+
+| Keyword | Description |
+|---|---|
+| `long` | Include size, date, and comment |
+| `verylong` | Include size, date, comment, and CRC |
+| `query <file>` | Apply a query filter file |
+
+---
+
+### fei5delete
+
+Delete one or more files from an FEI file type.
+
+```
+fei5delete [servergroup:]filetype '<file expression>'
+           [filehandler] [help]
+
+fei5delete using <option file>
+```
+
+> **Caution:** Deletion is permanent.
+
+---
+
+### fei5replace
+
+Replace an existing file in an FEI file type with a new version.
+
+```
+fei5replace [servergroup:]filetype <file expression>
+            [before|after <datetime>] | [between <datetime1> and <datetime2>]
+            [format '<date format>'] [comment '<comment text>']
+            [crc] [receipt] [autodelete] [diff] [filehandler] [help]
+```
+
+---
+
+### fei5rename
+
+Rename a file within an FEI file type.
+
+```
+fei5rename [servergroup:]filetype <old name> <new name> [help]
+```
+
+---
+
+### fei5comment
+
+Add or update a comment on a file.
+
+```
+fei5comment [servergroup:]filetype <filename> '<comment text>' [help]
+```
+
+---
+
+### fei5crc
+
+Compute and display CRC checksums for files in an FEI file type.
+
+```
+fei5crc [servergroup:]filetype ['<file expression>'] [help]
+```
+
+---
+
+### fei5check
+
+Check for discrepancies between the server catalog and stored files.
+
+```
+fei5check [servergroup:]filetype [help]
+```
+
+---
+
+### fei5checkfiles
+
+Check file integrity within an FEI file type.
+
+```
+fei5checkfiles [servergroup:]filetype [help]
+```
+
+---
+
+### fei5display
+
+Print a file's contents to standard output.
+
+```
+fei5display [servergroup:]filetype <filename> [help]
+```
+
+---
+
+## Virtual File Type (VFT) Commands
+
+> **Deprecation notice:** The VFT subsystem is a legacy feature still present in the current client and server. It is expected to be removed in a future release.
+
+VFT commands are only available in the **interactive `fei5` session** (`fei5` / `fei5 -b`). There are no standalone `fei5*` scripts for VFT operations. See [User's Guide §5.6](users-guide.md#56-virtual-file-types-vft) for a conceptual overview.
+
+All VFT commands take the VFT name as an explicit argument — no `use` pre-selection is required.
+
+---
+
+### addVFT
+
+Create a new Virtual File Type.
+
+```
+addVFT <vft> ["<comment>"]
+```
+
+---
+
+### delVFT
+
+Permanently delete a VFT and all its reference history.
+
+```
+delVFT <vft>
+```
+
+---
+
+### addReference
+
+Add a named reference slot to a VFT. `link` is an optional server-side filesystem symlink path.
+
+```
+addReference <vft> <ref>
+addReference <vft> <ref> "<comment>"
+addReference <vft> <ref> <link>
+addReference <vft> <ref> <link> "<comment>"
+```
+
+---
+
+### setReference
+
+Stage a reference to point to a specific file. Changes are not committed until `updateVFT` is run. Omitting `fileType` and `fileName` queues a clear of the reference.
+
+```
+setReference <vft> <ref>
+setReference <vft> <ref> <fileType> <fileName>
+```
+
+---
+
+### updateVFT
+
+Commit all pending `setReference` changes as a new VFT snapshot.
+
+```
+updateVFT <vft>
+updateVFT <vft> "<comment>"
+```
+
+---
+
+### cancelReference
+
+Undo a staged `setReference` before it has been committed by `updateVFT`.
+
+```
+cancelReference <vft> <ref>
+```
+
+---
+
+### delReference
+
+Permanently remove a reference slot and all its history from a VFT.
+
+```
+delReference <vft> <ref>
+```
+
+---
+
+### getVFT
+
+Download all files referenced by a VFT. Writes a `<vft>.vft` manifest file to the current directory. Supplying a date retrieves the historical snapshot.
+
+```
+getVFT <vft>
+getVFT <vft> <yyyy-MM-ddThh:mm:ss.SSS>
+```
+
+---
+
+### getReference
+
+Download the single file that a named reference points to.
+
+```
+getReference <vft> <ref>
+getReference <vft> <ref> <yyyy-MM-ddThh:mm:ss.SSS>
+```
+
+---
+
+### showVFT
+
+List VFTs and their references.
+
+```
+showVFT
+showVFT <vft>
+showVFT <yyyy-MM-ddThh:mm:ss.SSS>
+showVFT <vft> <yyyy-MM-ddThh:mm:ss.SSS>
+```
+
+No arguments lists all VFTs on the current server group. With a VFT name, shows that VFT's references and any pending staged changes. With a date, shows the historical snapshot.
+
+---
+
+### addVFTReader
+
+Grant an OS-level filesystem user read access to a VFT's server-side symlinks.
+
+```
+addVFTReader <vft> <osUser>
+```
+
+---
+
+### delVFTReader
+
+Revoke a filesystem user's read access to a VFT.
+
+```
+delVFTReader <vft> <osUser>
+```
+
+---
+
+### showVFTReaders
+
+List filesystem users permitted to read a VFT's server-side symlinks.
+
+```
+showVFTReaders <vft>
+showVFTReaders <vft> <osUser>
+```
+
+---
+
+## Subscription Commands
+
+### fei5subscribe
+
+Subscribe to an FEI file type for continuous file delivery.
+
+```
+fei5subscribe [servergroup:]filetype
+              [output <path>] [restart] [using <option file>]
+              [pull|push] [replace|version] [format '<date format>']
+              [query <queryfile>] [replicate] [replicateroot <rootdir>]
+              [filehandler] [diff] [help]
+```
+
+| Keyword | Description |
+|---|---|
+| `output <path>` | Local directory for received files |
+| `restart` | Persist last-query timestamp to `<outputDir>/.shadow/.<group>.<type>.restart` and enable byte-offset transfer resume on interrupted downloads |
+| `pull` / `push` | Delivery mode |
+| `using <file>` | Load options from a file |
+
+**Option file keywords** (one per line):
+
+| Keyword | Description |
+|---|---|
+| `crc` | Verify CRC on receipt |
+| `diff` | Only retrieve files that differ locally |
+| `invoke <command>` | Run this command after each file is received |
+| `invokeExitOnError` | Stop subscription if invoked command exits non-zero |
+| `invokeAsync` | Run invoked command asynchronously |
+| `logFile <filename>` | Write subscription log to this file |
+| `logFileRolling <interval>` | Roll log: `monthly` `weekly` `daily` `hourly` `minutely` `halfdaily` |
+| `mailMessageFrom <addr>` | Per-file email notification sender address |
+| `mailMessageTo <addr,...>` | Per-file email notification recipient(s) |
+| `mailReportAt <hh:mm am/pm,...>` | Send summary report at these times |
+| `mailReportTo <addr,...>` | Summary report recipient(s) |
+| `mailSMTPHost <host>` | SMTP relay host |
+| `mailSilentReconnect` | Suppress reconnection notification emails |
+| `receipt` | Request delivery receipt from server |
+| `replace` | Overwrite local file if it already exists |
+| `saferead` | Lock file on server during download |
+| `version` | Download into a versioned filename |
+
+---
+
+### fei5guardian
+
+Auto-restarting subscription daemon (Unix/Linux/macOS only). Wraps `fei5subscribe` and restarts it automatically on network errors or server disconnects.
+
+```
+fei5guardian [servergroup:]filetype [output <path>] [using <option file>] [help]
+```
+
+---
+
+### fei5notify
+
+Subscribe to file-arrival notifications without downloading files.
+
+```
+fei5notify [servergroup:]filetype [help]
+```
+
+---
+
+## Information and Utility Commands
+
+### fei5filetypes
+
+List file types or server groups.
+
+```
+fei5filetypes '[servergroup:][<filetype expression>]'
+fei5filetypes srvgroups
+```
+
+`srvgroups` lists server groups; omitting it lists file types within a server group.
+
+---
+
+### showCapabilities (interactive session only)
+
+Show your access capabilities for file types and VFTs on the current server group. Available in the `fei5` interactive session only — there is no standalone `fei5*` script wrapper.
+
+```
+showCapabilities [<filetype>]
+showCapabilities [<servergroup>:]<filetype>
+```
+
+Alias: `showCaps`
+
+With no argument, lists user-level access and per-filetype capability strings for all file types and VFTs on the current server group. With a file type name, shows capabilities for that type only.
+
+See [User's Guide §5.5](users-guide.md#55-utility-commands) for usage details.
+
+---
+
+### fei5showhandlers
+
+Display the list of configured file handlers.
+
+```
+fei5showhandlers
+```
+
+---
+
+### fei5makeclean
+
+Remove locally cached FEI state files (subscription cursors, etc.).
+
+```
+fei5makeclean [servergroup:]filetype [help]
+```
+
+---
+
+### fei5reference
+
+Display a quick reference card for all FEI commands.
+
+```
+fei5reference
+```
+
+---
+
+### fei5gui
+
+Launch the Savannah graphical user interface.
+
+```
+fei5gui
+```
+
+Requires `$FEI5` to be set. See [User's Guide §7](users-guide.md#7-graphical-user-interface-savannah) for details.
+
+---
+
+## Administration Commands
+
+### fei5register
+
+Register a new file type on an FEI server group. Requires administrative privileges.
+
+```
+fei5register [servergroup:]filetype [help]
+```
+
+---
+
+### fei5unregister
+
+Unregister a file type. Requires administrative privileges.
+
+```
+fei5unregister [servergroup:]filetype [help]
+```
+
+---
+
+### fei5locktype
+
+Lock an FEI file type to prevent add and delete operations. Requires administrative privileges.
+
+```
+fei5locktype [servergroup:]filetype [help]
+```
+
+---
+
+### fei5unlocktype
+
+Unlock a previously locked file type. Requires administrative privileges.
+
+```
+fei5unlocktype [servergroup:]filetype [help]
+```
+
+---
+
+### fei5accept
+
+Accept a pending user operation request. Requires administrative privileges.
+
+```
+fei5accept [servergroup:]filetype for <add|replace|get|delete>
+           [output <path>] [crc] [saferead] [autodelete]
+           [replace|version] [diff] [help]
+```
+
+---
+
+### fei5admin
+
+Interactive administration session. Launches a command loop (same infrastructure as `fei5`) with sub-commands for managing users, roles, file types, locks, and server operations. Requires admin credentials.
+
+```
+fei5admin [-b <batch file>]
+```
+
+See [User's Guide §7.2](users-guide.md#72-interactive-admin-session-fei5admin) for the full sub-command listing. Key sub-commands:
+
+| Category | Sub-commands |
+|---|---|
+| Users | `addUser`, `delUser`, `showUsers`, `addUserToRole`, `delUserFromRole`, `showRolesForUser`, `modifyUserAccess` |
+| Roles | `addRole`, `delRole`, `modifyRole`, `showRoles`, `showUsersForRole` |
+| File types | `addFileType`, `delFileType`, `modifyFileType`, `showFileTypes`, `addFileTypeToRole`, `delFileTypeFromRole`, `showFiletypesForRole`, `showRolesForFileType` |
+| Locks | `showLocks`, `setLock` |
+| Server | `connect`, `focus`, `hotboot`, `shutdown`, `fSync`, `dSync`, `showServers`, `showConnections`, `connections`, `showMemory`, `showServerParameters`, `logMessage` |
+| Files | `move` |
+
+---
+
+### fei5publish
+
+Publish a file type definition to the FEI server.
+
+```
+fei5publish [help]
+```
+
+---
+
+### pwdclient
+
+Password management utility.
+
+```
+pwdclient [help]
+```
+
+---
+
+### fei5encrypt
+
+Generate a SHA-1 hash of a password string. Used during **server bootstrap only** — when an FEI server needs to be seeded with its initial administrator password hash.
+
+```
+fei5encrypt
+```
+
+Takes no arguments. Prompts interactively:
+
+```
+Message >>
+```
+
+The input is not echoed to the terminal. The output is the SHA-1 digest printed as a 40-character hex string, e.g.:
+
+```
+8843d7f92416211de9ebb963ff4ce28125932878
+```
+
+> **Note:** This is a one-way hash. It is not used for client authentication — client login credentials are encrypted with RSA/OAEP and handled automatically by `fei5kinit`. `fei5encrypt` is only needed by an FEI server administrator configuring a new server instance. Normal users do not need this command.
+
+---
+
+*Back to [User's Guide](users-guide.md) | See also [Appendix B — Troubleshooting](appendix-b-troubleshooting.md)*

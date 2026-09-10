@@ -1,9 +1,19 @@
 /*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
+/*
  * Created on Nov 23, 2004
  */
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.logging;
-
-
 
 /**
  * <b>Purpose:</b>
@@ -28,7 +38,7 @@ package jpl.mipl.mdms.FileService.komodo.ui.savannah.logging;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: LogEntry.java,v 1.4 2005/09/28 18:24:59 ntt Exp $
+
  *
  */
 

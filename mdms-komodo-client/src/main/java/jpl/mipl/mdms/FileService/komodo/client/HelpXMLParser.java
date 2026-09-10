@@ -1,7 +1,13 @@
-/**
- * @copyright Copyright 2003, California Institute of Technology. ALL RIGHTS
- *            RESERVED. U.S. Government Sponsorship acknowledged. 29-6-2000.
- *            MIPL Data Management System (MDMS).
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
  */
 
 package jpl.mipl.mdms.FileService.komodo.client;
@@ -25,7 +31,7 @@ import org.xml.sax.SAXException;
  * Komodo XML parser for client Help information.
  * 
  * @author R. Pavlovsky, {Rich.Pavlovsky@jpl.nasa.gov}
- * @version $Id: HelpXMLParser.java,v 1.7 2004/10/27 00:52:39 txh Exp $
+
  */
 public class HelpXMLParser extends DomXmlParser {
    private static Stack _stack = new Stack();

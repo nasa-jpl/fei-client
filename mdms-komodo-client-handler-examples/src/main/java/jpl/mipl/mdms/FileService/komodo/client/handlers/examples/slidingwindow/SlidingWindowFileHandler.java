@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.client.handlers.examples.slidingwindow;
 
 import java.io.File;
@@ -112,7 +124,7 @@ import jpl.mipl.mdms.utils.logging.Logger;
  * directory local file.
  * 
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SlidingWindowFileHandler.java,v 1.1 2011/05/25 22:18:46 ntt Exp $
+
  * 
  */
 
@@ -654,7 +666,6 @@ public class SlidingWindowFileHandler extends AbstractFileEventHandler
                 makeSpace();           
         }        
     }
-
 
     //---------------------------------------------------------------------
     

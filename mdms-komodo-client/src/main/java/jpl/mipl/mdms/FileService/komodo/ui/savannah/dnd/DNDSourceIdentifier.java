@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.dnd;
 
 /**
@@ -23,7 +35,7 @@ package jpl.mipl.mdms.FileService.komodo.ui.savannah.dnd;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: DNDSourceIdentifier.java,v 1.1 2004/09/21 22:11:28 ntt Exp $
+
  *
  */
 

@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah;
 
 import java.awt.BorderLayout;
@@ -64,7 +76,7 @@ import jpl.mipl.mdms.FileService.komodo.ui.savannah.tools.SetDateTimeFilterActio
  * </PRE>
  *
  * @author Nicholas Toole (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SavannahPanel.java,v 1.41 2013/04/08 15:31:47 ntt Exp $
+
  *
  */
 
@@ -425,7 +437,6 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
       buttonPanel.add(Box.createHorizontalStrut(20));
       buttonPanel.add(_disconnectFeiServerButton);
 
-
 //      _connectFeiServerButton = new JButton("Connect");
 //      _disconnectFeiServerButton = new JButton("Disconnect");
       _disconnectFeiServerButton.setEnabled(false);
@@ -551,7 +562,6 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
       JPanel panel2 = new JPanel();
       panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
 
-
       //Connected to Label
       connectedToLabel.setHorizontalAlignment(SwingConstants.CENTER);
       gridBagConstraints = new GridBagConstraints();
@@ -588,7 +598,6 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
       gridBagConstraints.insets = new Insets(secondLevelTopInset, 0, secondLevelBottomInset, 4);
       //panel.add(_curServerLabel, gridBagConstraints);
 
-
       //---------------------------
 
       //Current FEI type label
@@ -600,7 +609,6 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
       gridBagConstraints.weightx = 0.0;//      gridBagConstraints.weightx = 0.5;
       gridBagConstraints.insets = new Insets(secondLevelTopInset, 0, secondLevelBottomInset, 0);
       //panel.add(_curTypeLabel, gridBagConstraints);
-
 
       panel2.add(connectedToLabel);
       panel2.add(_curServerLabel);
@@ -667,7 +675,6 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
 
       //---------------------------
 
-
       //FEI filename filter bounded box:
       _feiFilenameFilterBox.setSelectedItem(_filterModel.getPattern("FEI_FILTER"));
       _feiFilenameFilterBox.addActionListener(new ActionListener() {
@@ -710,10 +717,7 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
       gridBagConstraints.insets = new Insets(7, 0, 1, 1);
       panel.add(_feiFilenameFilterBox, gridBagConstraints);
 
-
       //---------------------------
-
-
 
       _feiDateFilterButton.addActionListener(
              new SetDateTimeFilterAction(this, this._model));
@@ -727,7 +731,6 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
               _feiDateFilterButton.setIcon(newIcon);
           }
       });
-
 
 //      _feiDateFilterButton.setPreferredSize(new Dimension(20,
 //              _feiDateFilterButton.getPreferredSize().height));
@@ -745,8 +748,6 @@ public class SavannahPanel extends JPanel implements PropertyChangeListener {
       gridBagConstraints.weighty = .0;
       gridBagConstraints.insets = new Insets(8, 7, 1, 1);
       panel.add(_feiDateFilterButton, gridBagConstraints);
-
-
 
       //---------------------------
 

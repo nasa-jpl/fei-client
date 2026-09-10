@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.subscription;
 
 import java.awt.BorderLayout;
@@ -52,7 +64,7 @@ import javax.swing.SwingUtilities;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: NotificationOptionsPanel.java,v 1.11 2013/08/21 22:10:01 ntt Exp $
+
  *
  */
 public class NotificationOptionsPanel extends JPanel {
@@ -63,7 +75,6 @@ public class NotificationOptionsPanel extends JPanel {
     protected JPanel _bottomPanel;
     protected JLabel _exitInkErrorLabel;
     protected JCheckBox _exitOnInvokeErrorBox;
-
 
     protected JLabel _filetypeLabel;
     protected JLabel _filetypeValueLabel;
@@ -107,7 +118,6 @@ public class NotificationOptionsPanel extends JPanel {
     protected JCheckBox _mailSilentReconnBox;
 
     // End of variables declaration//GEN-END:variables
-
 
     protected NotificationParameters _params;
     //protected File _cacheFile = null;
@@ -164,7 +174,6 @@ public class NotificationOptionsPanel extends JPanel {
         _mailMessageToLabel = new JLabel();
         _mailMessageFromLabel = new JLabel();
 
-
         _exitOnInvokeErrorBox = new JCheckBox();
         _mailSilentReconnBox = new JCheckBox();
         _restartBox = new JCheckBox();
@@ -208,7 +217,6 @@ public class NotificationOptionsPanel extends JPanel {
         setPreferredSize(new Dimension(600, 420));
         _subPanel.setLayout(new GridBagLayout());
         _topPanel.setLayout(new GridBagLayout());
-
 
         String purposeStr = (this._readOnly) ? "Review" : "Supply";
         purposeStr +=  " notification options.  ";
@@ -415,7 +423,6 @@ public class NotificationOptionsPanel extends JPanel {
         gridBagConstraints.insets = new Insets(0, 2, 3, 0);
         _midPanel.add(_exitOnInvokeErrorBox, gridBagConstraints);
 
-
        // _mailSilentReconnBox
 
         _restartBox.setToolTipText("Enable/disable restart option");
@@ -513,7 +520,6 @@ public class NotificationOptionsPanel extends JPanel {
         gridBagConstraints.insets = new Insets(0, 2, 3, 15);
         _midPanel.add(_invokeCmdField, gridBagConstraints);
 
-
         _methodLabel.setText("Method:");
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -579,8 +585,6 @@ public class NotificationOptionsPanel extends JPanel {
         gridBagConstraints.anchor = GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new Insets(0, 2, 3, 0);
         _midPanel.add(_sessionStayAliveBox, gridBagConstraints);
-
-
 
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -814,7 +818,6 @@ public class NotificationOptionsPanel extends JPanel {
             }
         };
 
-
         //create action listener for radio buttons
         ActionListener rbActListener = new ActionListener() {
           public void actionPerformed(ActionEvent ae)
@@ -915,7 +918,6 @@ public class NotificationOptionsPanel extends JPanel {
 
         //-------------------------
 
-
         //-------------------------
 
         //-------------------------
@@ -939,7 +941,6 @@ public class NotificationOptionsPanel extends JPanel {
                }
            }
          });
-
 
         this._loadFromCacheButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae)
@@ -1013,8 +1014,6 @@ public class NotificationOptionsPanel extends JPanel {
 //               updateCacheFileButtons();
 //           }
 //        });
-
-
 
 //        //store current options to the cache file
 //        this._storeToCacheButton.addActionListener(new ActionListener() {

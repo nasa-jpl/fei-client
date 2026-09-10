@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
+
 package jpl.mipl.mdms.FileService.komodo.ui.savannah.subscription;
 
 import java.awt.BorderLayout;
@@ -52,11 +64,10 @@ import javax.swing.SwingUtilities;
  * </PRE>
  *
  * @author Nicholas Toole   (Nicholas.T.Toole@jpl.nasa.gov)
- * @version $Id: SubscriptionOptionsPanel.java,v 1.13 2013/08/21 22:10:01 ntt Exp $
+
  */
 
 public class SubscriptionOptionsPanel extends JPanel {
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected JPanel _bottomPanel;
@@ -139,7 +150,6 @@ public class SubscriptionOptionsPanel extends JPanel {
         initComponents();
         init();
     }
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -232,7 +242,6 @@ public class SubscriptionOptionsPanel extends JPanel {
         _subPanel.setLayout(new GridBagLayout());
 
         _topPanel.setLayout(new GridBagLayout());
-
 
         String purposeStr = (this._readOnly) ? "Review" : "Supply";
         purposeStr +=  " subscription options.  ";
@@ -597,7 +606,6 @@ public class SubscriptionOptionsPanel extends JPanel {
         gridBagConstraints.insets = new Insets(0, 15, 3, 0);
         _midPanel.add(_diffLabel, gridBagConstraints);
 
-
         _existFileLabel.setText("Existing file handling:");
         _existFileLabel.setToolTipText("Select how to handle case when " +
                 "file already exists");
@@ -675,7 +683,6 @@ public class SubscriptionOptionsPanel extends JPanel {
         gridBagConstraints.insets = new Insets(0, 2, 3, 15);
         _midPanel.add(_methodOptionsPanel, gridBagConstraints);
 
-
         _mailSilentReconnLabel.setText("Silent Reconnect:");
         _mailSilentReconnLabel.setToolTipText("No email message will be sent out for reconnection messages");
         gridBagConstraints = new GridBagConstraints();
@@ -693,7 +700,6 @@ public class SubscriptionOptionsPanel extends JPanel {
         gridBagConstraints.insets = new Insets(0, 2, 3, 0);
         _midPanel.add(_mailSilentReconnBox, gridBagConstraints);
 
-
         _sessionStayAliveLabel.setText("Persist session:");
         _sessionStayAliveLabel.setToolTipText("Enable to persist session across applications");
         gridBagConstraints = new GridBagConstraints();
@@ -710,8 +716,6 @@ public class SubscriptionOptionsPanel extends JPanel {
         gridBagConstraints.anchor = GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new Insets(0, 2, 3, 0);
         _midPanel.add(_sessionStayAliveBox, gridBagConstraints);
-
-
 
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -754,7 +758,6 @@ public class SubscriptionOptionsPanel extends JPanel {
         add(_subPanel, BorderLayout.CENTER);
 
     }//GEN-END:initComponents
-
 
     //---------------------------------------------------------------------
 
@@ -1226,7 +1229,6 @@ public class SubscriptionOptionsPanel extends JPanel {
     }
 
     //---------------------------------------------------------------------
-
 
     // End of variables declaration//GEN-END:variables
 

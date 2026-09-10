@@ -1,4 +1,15 @@
 #!/bin/sh 
+
+# Copyright (c) 2026 by the California Institute of Technology.
+# ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+# Any commercial use must be negotiated with the Office of Technology
+# at the California Institute of Technology.
+#
+# The technical data in this document (or file) is controlled for export
+# under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+# Violations of these laws are subject to fines and penalties under the
+# Export Administration Act.
+
 #
 ### ==================================================================== ###
 #                                                                          #
@@ -10,15 +21,7 @@
 #  variable must point to the directory containing the domain.fei and SSL  #
 #  keystore files.                                                         #
 #                                                                          #
-#  Copyright (c) 2006 by the California Institute of Technology.           #
-#  ALL RIGHTS RESERVED.  United States Government Sponsorship              #
-#  acknowledged. Any commercial use must be negotiated with the            #
-#  Office of Technology at the California Institute of Technology.         #
 #                                                                          #
-#  The technical data in this document (or file) is controlled for         #
-#  export under the Export Administration Regulations (EAR), 15 CFR,       #
-#  Parts 730-774. Violations of these laws are subject to fines and        #
-#  penalties under the Export Administration Act.                          #
 #                                                                          #
 #                                                                          #
 #  Created:                                                                #
@@ -27,7 +30,6 @@
 #                                                                          #
 ### ==================================================================== ###
 #
-# $Id: fei5showhandlers.sh,v 1.1 2011/06/01 23:27:54 ntt Exp $
 #
 
 MYNAME=`basename $0`

@@ -1,7 +1,14 @@
-/*******************************************************************************
- * Copyright (C) 1999 California Institute of Technology. All rights reserved US
- * Government Sponsorship under NASA contract NAS7-918 is acknowledged
- ******************************************************************************/
+/*
+ * Copyright (c) 2026 by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * at the California Institute of Technology.
+ *
+ * The technical data in this document (or file) is controlled for export
+ * under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+ * Violations of these laws are subject to fines and penalties under the
+ * Export Administration Act.
+ */
 
 package jpl.mipl.mdms.FileService.komodo.client;
 
@@ -66,7 +73,7 @@ import jpl.mipl.mdms.utils.logging.Logger;
  * This class defines the client side command line interpreter objects
  *
  * @author G. Turek, T. Huang {Thomas.Huang@jpl.nasa.gov}
- * @version $Id: CLProcessor.java,v 1.89 2016/09/29 23:24:56 ntt Exp $
+
  */
 public class CLProcessor {
    protected String _version = Constants.CLIENTVERSIONSTR;
@@ -256,7 +263,6 @@ public class CLProcessor {
          System.exit(1);
       }
 
-
       //Create a authentication token generator
       try {
           _userAuthenticator = new UserAuthenticator(this._domainFile);
@@ -265,7 +271,6 @@ public class CLProcessor {
          this._logger.debug(null, se);
          System.exit(1);
       }
-
 
    }
 
@@ -480,7 +485,6 @@ public class CLProcessor {
                this.exit(); // Does not return.
             }
 
-
          }
          else
          {
@@ -507,7 +511,6 @@ public class CLProcessor {
              this._handleError("Unable to encrypt password.");
              return;
          }
-
 
          if (this._connections.size() > 0)
          {
@@ -596,12 +599,7 @@ public class CLProcessor {
 
               final String pwdPrompt = PasswordUtil.getPrompt(authType);
 
-
               //---------------------------
-
-
-
-
 
              System.out.print("User name>> ");
              System.out.flush();
@@ -670,7 +668,6 @@ public class CLProcessor {
               return;
           }
 
-
           //perform authentication token generation
           try {
               authToken = this._userAuthenticator.authenticate
@@ -687,7 +684,6 @@ public class CLProcessor {
               this._handleError(errMesg);
               return;
           }
-
 
           if (this._connections.size() > 0)
           {
@@ -707,7 +703,6 @@ public class CLProcessor {
              this._writeTTYLine(e.getMessage());
        }
     }
-
 
    /**
     * Method to load user login information from the cached login file
@@ -1249,7 +1244,6 @@ public class CLProcessor {
       this._writeTTYLine("Current directory set to " + this._currentDir);
    }
 
-
    /**
     * Process history command
     *
@@ -1287,7 +1281,6 @@ public class CLProcessor {
                   this._handleError("Argument out of range");
                   return;
               }
-
 
               int index = 0;
               if (number > 0)

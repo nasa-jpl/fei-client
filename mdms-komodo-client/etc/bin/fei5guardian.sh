@@ -1,4 +1,15 @@
 #! /bin/sh 
+
+# Copyright (c) 2026 by the California Institute of Technology.
+# ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+# Any commercial use must be negotiated with the Office of Technology
+# at the California Institute of Technology.
+#
+# The technical data in this document (or file) is controlled for export
+# under the Export Administration Regulations (EAR), 15 CFR, Parts 730-774.
+# Violations of these laws are subject to fines and penalties under the
+# Export Administration Act.
+
 ##-xv
 
 ### ==================================================================== ###
@@ -8,21 +19,12 @@
 # Can be invoked using list files for filenames and criteria               #
 # See usage for more information.                                          #
 #                                                                          #
-#  Copyright (c) 2006 by the California Institute of Technology.           #
-#  ALL RIGHTS RESERVED.  United States Government Sponsorship              #
-#  acknowledged. Any commercial use must be negotiated with the            #
-#  Office of Technology at the California Institute of Technology.         #
 #                                                                          #
-#  The technical data in this document (or file) is controlled for         #
-#  export under the Export Administration Regulations (EAR), 15 CFR,       #
-#  Parts 730-774. Violations of these laws are subject to fines and        #
-#  penalties under the Export Administration Act.                          #
 #                                                                          #
 # Author: Nicholas Toole (Nicholas.T.Toole@jpl.nasa.gov)                  #
 # Date: February 1, 2006                                                  #
 # Version: 1.0                                                            #
 # Dependencies: Criteria scripts with names passed in as parameter        #
-# $Id: fei5guardian.sh,v 1.5 2006/10/03 02:18:18 ntt Exp $                #
 #                                                                          #
 ### ==================================================================== ###
 
